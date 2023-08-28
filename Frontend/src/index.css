@@ -1,0 +1,16 @@
+:root {
+    --mainBGColor: rgb(15, 18, 22);
+    --mainFontColor: rgb(164, 169, 175);
+}
+
+html, body, #root {
+    height: 100%;
+    text-align: center;
+    background-color: var(--mainBGColor);
+    color: var(--mainFontColor);
+}
+
+a {
+    color: var(--mainFontColor);
+}
+

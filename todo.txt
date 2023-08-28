@@ -1,0 +1,4 @@
+1. Check if JS/TS date syntax is in sync with MySQL date syntax. (Not datetime!)
+2. Finish Secure Coding: SQLi protection in auth-service.ts
+3. Change or remove updateUser in auth-service
+4. Pick a way to do user IDs and finish creating the system for it.
