@@ -6,11 +6,11 @@
 html, body, #root {
     height: 100%;
     text-align: center;
-    background-color: var(--mainBGColor);
-    color: var(--mainFontColor);
+    /* background-color: var(--mainBGColor);
+    color: var(--mainFontColor); */
 }
 
 a {
-    color: var(--mainFontColor);
+    /* color: var(--mainFontColor); */
 }
 

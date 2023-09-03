@@ -3,7 +3,7 @@ import "./Header.css";
 function Header(): JSX.Element {
     return (
         <div className="Header">
-			<h1>Full Stack Template...</h1>
+			<h4>Full Stack Template...</h4>
         </div>
     );
 }
