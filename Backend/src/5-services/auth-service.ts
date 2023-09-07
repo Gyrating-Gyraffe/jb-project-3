@@ -48,6 +48,15 @@ async function login(credentials: CredentialsModel): Promise<string> {
     return token;
 }
 
+async function logout(token: string): Promise<string> {
+
+    
+
+
+
+    return token;
+}
+
 async function isEmailTaken(email: string): Promise<boolean> {
     
     const sql = `SELECT COUNT(*) as count FROM users WHERE email = ?`;
@@ -60,5 +69,6 @@ async function isEmailTaken(email: string): Promise<boolean> {
 
 export default {
     register,
-    login
+    login,
+    logout
 }

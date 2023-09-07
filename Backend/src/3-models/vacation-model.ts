@@ -1,4 +1,6 @@
 import Joi from "joi";
+import { ValidationError } from "./client-errors";
+import { UploadedFile } from "express-fileupload";
 
 class VacationModel {
     public vacationId: number;
@@ -7,7 +9,8 @@ class VacationModel {
     public startDate: Date;
     public endDate: Date;
     public price: number;
-    public imageName: string;
+    public imageUrl: string;
+    public image: UploadedFile;
 
     public constructor(vacation: VacationModel) {
         this.vacationId = vacation.vacationId;
@@ -16,22 +19,24 @@ class VacationModel {
         this.startDate = vacation.startDate;
         this.endDate = vacation.endDate;
         this.price = vacation.price;
-        this.imageName = vacation.imageName;
+        this.imageUrl = vacation.imageUrl;
+        this.image = vacation.image;
     }
 
     public static validationSchema = Joi.object({
         vacationId: Joi.number().integer().positive().optional(),
-        destination: Joi.string().required().min(2).max(100),
-        description: Joi.string().required().min(2).max(1000),
+        destination: Joi.string().required().min(2).max(100).trim().regex(/[a-z\d\-_\s]+/i),
+        description: Joi.string().required().min(2).max(1000).trim().regex(/[a-z\d\-_\s]+/i),
         startDate: Joi.date().iso().required(),
         endDate: Joi.date().iso().min(Joi.ref('startDate')).required(),
         price: Joi.number().required().positive(),
-        imageName: Joi.string().optional().allow('')
+        imageUrl: Joi.string().optional().allow(''),
+        image: Joi.object().optional()
     });
 
-    public validate(): string {
+    public validate(): void {
         const result = VacationModel.validationSchema.validate(this);
-        return result.error?.message;
+        if(result.error?.message) throw new ValidationError(result.error.message);
     }
 }
 

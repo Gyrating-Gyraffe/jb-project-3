@@ -23,6 +23,7 @@ class NotifyService {
 
         // If error thrown by axios:
         if (err.response?.data) return err.response.data;
+        else if (err.message === "AxiosError: Network Error") return "Couldn't connect to the server";
 
         // Unknown error (JIC = Just in Case)
         return "Some error, please try again";

@@ -2,3 +2,7 @@
 2. Finish Secure Coding: SQLi protection in auth-service.ts
 3. Change or remove updateUser in auth-service
 4. Pick a way to do user IDs and finish creating the system for it.
+
+5. Elaborate on token system - Add refresh token and limit access token lifetime.
+6. Elaborate on error notification on client-side: Add recognition for forbidden requests and prompt user to log in.
+7. Hash password on client-side before sending over HTTP request.

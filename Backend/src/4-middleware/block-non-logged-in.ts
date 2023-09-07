@@ -3,7 +3,7 @@ import cyber from "../2-utils/cyber";
 import { UnauthorizedError } from "../3-models/client-errors";
 
 async function blockNonLoggedIn(request: Request, response: Response, next: NextFunction) {
-    try {
+    try {     
         const token = await cyber.verifyToken(request);
         if(!token) throw new UnauthorizedError("You are not logged in");
         next();

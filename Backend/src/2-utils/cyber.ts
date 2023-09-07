@@ -20,12 +20,8 @@ function getNewToken(user: UserModel): string {
 function verifyToken(request: Request): Promise<string | null> {
     return new Promise<string | null>((resolve, reject) => {
         try {
-            const header = request.header("authorization");
-            if (!header) {
-                resolve(null);
-                return;
-            }
-            const token = header.substring(7);
+            const token = request.cookies.access_token;
+            
             if (!token) {
                 resolve(null);
                 return;

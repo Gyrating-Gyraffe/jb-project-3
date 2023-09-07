@@ -1,5 +1,4 @@
 import Joi from "joi";
-import uuid from "../2-utils/uuid";
 
 class UserModel {
     public userId: number;

@@ -3,9 +3,15 @@ import { OkPacket } from "mysql";
 import UserModel from "../3-models/user-model";
 import { ListNotFoundError, ResourceNotFoundError, ValidationError } from "../3-models/client-errors";
 import VacationModel from "../3-models/vacation-model";
+import imageHelper from "../2-utils/image-helper";
+import appConfig from "../2-utils/app-config";
 
 async function getAllVacations(): Promise<VacationModel[]> {
-    const sql = `SELECT * FROM vacations`;
+    // Create sql: 
+    const sql = `SELECT vacationId, destination, description, startDate, endDate, price,
+                    CONCAT('${appConfig.domainName}/api/vacations/', imageName) as imageUrl
+                FROM vacations`;
+
     const vacations = await dal.execute(sql);
 
     if(vacations.length === 0) throw new ListNotFoundError();
@@ -14,14 +20,25 @@ async function getAllVacations(): Promise<VacationModel[]> {
 }
 
 async function addVacation(vacation: VacationModel): Promise<VacationModel> {
+    vacation.validate();
+
+    const imageName = await imageHelper.saveImage(vacation.image);
+
     const sql = `INSERT INTO vacations VALUES(DEFAULT, ?, ?, ?, ?, ?, ?)`;
     
     const info: OkPacket = await dal.execute(sql, [vacation.destination, vacation.description, 
-        vacation.startDate, vacation.endDate, vacation.price, vacation.imageName || '']);
+        vacation.startDate, vacation.endDate, vacation.price, imageName]);
     
     // Standard A.I primary key:
     vacation.vacationId = info.insertId;
 
+    // Get image url:
+    vacation.imageUrl = `${appConfig.origin}/api/vacations/${imageName}`;
+
+    // Remove image from product object because we don't response it back:
+    delete vacation.image;
+
+    // Return added product:
     return vacation;
 }
 
@@ -36,7 +53,7 @@ async function updateVacation(vacation: VacationModel): Promise<void> {
                 WHERE vacationId = ?`;
     
     const info: OkPacket = await dal.execute(sql, [vacation.destination, vacation.description, 
-        vacation.startDate, vacation.endDate, vacation.price, vacation.imageName || '', vacation.vacationId]);
+        vacation.startDate, vacation.endDate, vacation.price, vacation.imageUrl || '', vacation.vacationId]);
 
     if(info.affectedRows === 0) throw new ResourceNotFoundError(vacation.vacationId);
 }

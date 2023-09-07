@@ -8,6 +8,7 @@ async function blockNonAdmin(request: Request, response: Response, next: NextFun
     try {
         const token = await cyber.verifyToken(request);
         const user: UserModel = cyber.getUserFromToken(token);
+        
 
         if(!token || !user) throw new UnauthorizedError("You are not logged in");
 

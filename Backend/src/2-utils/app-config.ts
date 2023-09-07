@@ -5,11 +5,13 @@ class AppConfig {
     public password = process.env.DB_PASSWORD;
     public database = process.env.DB_NAME;
     public origin = process.env.ORIGIN;
+    public domainName = `http://${this.host}:${this.port}`;
 }
 
 class DevelopmentConfig extends AppConfig {
     public isDevelopment = true;
     public isProduction = false;
+    
 }
 
 class ProductionConfig extends AppConfig {

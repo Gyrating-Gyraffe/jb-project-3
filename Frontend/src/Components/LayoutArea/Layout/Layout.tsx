@@ -1,8 +1,6 @@
 import CssBaseline from "@mui/material/CssBaseline";
-import Header from "../Header/Header";
-import Menu from "../Menu/Menu";
 import { ThemeProvider, createTheme } from '@mui/material/styles';
-import { teal, lime, amber } from '@mui/material/colors';
+import Menu from "../Menu/Menu";
 
 import Routing from "../Routing/Routing";
 

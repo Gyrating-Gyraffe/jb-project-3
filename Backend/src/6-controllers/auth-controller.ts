@@ -10,7 +10,9 @@ router.post("/auth/register", async (request: Request, response: Response, next:
     try {
         const user = new UserModel(request.body);
         const token = await authService.register(user);
-        response.status(201).json(token);
+
+        response.cookie('access_token', token, { httpOnly: true, secure: true });
+        response.status(201).send();
     }
     catch(err: any) {
         next(err);
@@ -21,7 +23,21 @@ router.post("/auth/login", async (request: Request, response: Response, next: Ne
     try {
         const credentials = new CredentialsModel(request.body);
         const token = await authService.login(credentials);
-        response.json(token);
+
+        response.cookie('access_token', token, { httpOnly: true, secure: true });
+        response.status(200).send();
+    }
+    catch(err: any) {
+        next(err);
+    }
+});
+
+router.post("/auth/logout", async (request: Request, response: Response, next: NextFunction) => {
+    try {
+        const token = await authService.logout(request.cookies.access_token);
+
+        response.cookie('access_token', token, { httpOnly: true, secure: true });
+        response.status(200).send();
     }
     catch(err: any) {
         next(err);

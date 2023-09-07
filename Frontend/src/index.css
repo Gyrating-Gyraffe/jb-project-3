@@ -10,7 +10,8 @@ html, body, #root {
     color: var(--mainFontColor); */
 }
 
-a {
-    /* color: var(--mainFontColor); */
+.text-link {
+    color: inherit;
+    text-decoration: inherit;
 }
 
