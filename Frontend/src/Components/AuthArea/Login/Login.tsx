@@ -1,12 +1,14 @@
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import { Avatar, Box, Button, Checkbox, CssBaseline, FormControlLabel, Grid, Link, Paper, TextField, Typography } from "@mui/material";
 import * as React from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import CredentialsModel from '../../../Models/CredentialsModel';
 import authService from '../../../Services/AuthService';
+import notifyService from '../../../Services/NotifyService';
 import Copyright from '../../LayoutArea/Copyright/Copyright';
 
 function Login(): JSX.Element {
+    const navigate = useNavigate();
 
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
@@ -16,8 +18,11 @@ function Login(): JSX.Element {
             password: data.get('password').toString(),
         });
         authService.login(credentials)
-            .then()
-            .catch();
+            .then(res => {
+                navigate('/home');
+                // Tell client we're now logged in.
+            })
+            .catch(err => notifyService.error(err));
     };
 
     return (

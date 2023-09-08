@@ -1,5 +1,6 @@
 import { Box, Button, Container, Grid, Stack, Typography } from "@mui/material";
 import { useEffect, useState } from 'react';
+import { useNavigate } from "react-router-dom";
 import VacationModel from '../../../Models/VacationModel';
 import dataService from "../../../Services/DataService";
 import notifyService from "../../../Services/NotifyService";
@@ -9,10 +10,15 @@ import Copyright from "../../LayoutArea/Copyright/Copyright";
 function Home(): JSX.Element {
     const [vacations, setVacations] = useState<VacationModel[]>([]);
 
+    const navigate = useNavigate();
+
     useEffect(() => {
         dataService.getAllVacations()
             .then(data => setVacations(data))
-            .catch(err => { notifyService.error(err) });
+            .catch(err => { 
+                notifyService.error(err); 
+                navigate('/login'); 
+            });
     }, []);
 
     return (
@@ -35,7 +41,7 @@ function Home(): JSX.Element {
             {/* Card Container */}
             <Container sx={{ py: 8 }} maxWidth="xl">
                 <Grid container spacing={4} justifyContent={'center'}>
-                    {vacations.map((vacation, index) => (
+                    {vacations && vacations.map((vacation, index) => (
                         <VacationCard vacation={vacation} key={index} />
                     ))}
                 </Grid>

@@ -54,12 +54,12 @@ function ResponsiveAppBar() {
               open={Boolean(anchorElNav)}
               onClose={handleCloseNavMenu} sx={{ display: { xs: 'block', md: 'none' } }}>
               {pages.map((page, index) => (
-                <MenuItem key={index} onClick={handleCloseNavMenu}>
-                  <Typography textAlign="center" component={NavLink} to={page.url} className='text-link'>
-                    {page.name}
-                  </Typography>
-                </MenuItem>
-              ))}
+                  <MenuItem key={index} onClick={handleCloseNavMenu}>
+                    <Typography textAlign="center" component={NavLink} to={page.url} className='text-link'>
+                      {page.name}
+                    </Typography>
+                  </MenuItem>
+                ))}
             </Menu>
           </Box>
 
@@ -85,14 +85,14 @@ function ResponsiveAppBar() {
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
             {pages.map((page, index) => (
-              <Button component={NavLink} to={page.url} className='text-link'
-                key={index}
-                onClick={handleCloseNavMenu}
-                sx={{ my: 2, color: 'white', display: 'block' }}
-              >
-                {page.name}
-              </Button>
-            ))}
+                <Button component={NavLink} to={page.url} className='text-link'
+                  key={index}
+                  onClick={handleCloseNavMenu}
+                  sx={{ my: 2, color: 'white', display: 'block' }}
+                >
+                  {page.name}
+                </Button>
+              ))}
           </Box>
 
           {/* USER MENU */}

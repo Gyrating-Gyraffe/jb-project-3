@@ -6,3 +6,5 @@
 5. Elaborate on token system - Add refresh token and limit access token lifetime.
 6. Elaborate on error notification on client-side: Add recognition for forbidden requests and prompt user to log in.
 7. Hash password on client-side before sending over HTTP request.
+
+8. Implement rate limiting
