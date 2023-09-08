@@ -25,7 +25,7 @@ function VacationCard(props: VacationCardProps): JSX.Element {
             </CardContent>
             {/* </CardActionArea> */}
             <CardActions>
-                <Button size="small" color="primary">
+                <Button size="small" color="secondary">
                     Follow
                 </Button>
             </CardActions>

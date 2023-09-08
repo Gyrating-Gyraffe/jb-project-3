@@ -8,11 +8,17 @@ function Layout(): JSX.Element {
     const theme = createTheme({
         palette: {
             primary: {
-                main: `#3f51b5`,
+                main: `#d52e24`,
             },
             secondary: {
-                main: `#3f8cb5`,
+                main: `#24cbd5`,
             },
+            action: {
+                active: '#24cbd5',
+                selected: '#24cbd5',
+
+            },
+            mode: 'light'
         },
         spacing: 2,
     });

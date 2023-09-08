@@ -49,7 +49,6 @@ async function login(credentials: CredentialsModel): Promise<string> {
 }
 
 async function logout(token: string): Promise<string> {
-
     
 
 

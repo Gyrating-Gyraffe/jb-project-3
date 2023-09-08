@@ -50,9 +50,9 @@ function Register(): JSX.Element {
                     </Button>
                     <Grid container justifyContent="flex-end">
                         <Grid item>
-                            <NavLink to="/login">
-                                Already have an account? Sign in
-                            </NavLink>
+                            <Link component={NavLink} to="/login">
+                                {"Already have an account? Sign in."}
+                            </Link>
                         </Grid>
                     </Grid>
                 </Box>
