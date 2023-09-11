@@ -1,7 +1,8 @@
 import { createStore } from "redux";
+import UserModel from "../Models/UserModel";
 
 export class AuthState {
-    public loggedIn: boolean;
+    public user: UserModel;
 }
 
 export enum AuthActionType {
@@ -11,14 +12,14 @@ export enum AuthActionType {
 
 export interface AuthAction {
     type: AuthActionType;
-    payload?: boolean;
+    payload?: UserModel;
 }
 
 export function authReducer(currentState: AuthState, action: AuthAction): AuthState {
-    const newState = (currentState);
+    const newState = (JSON.parse(JSON.stringify(currentState)));
     switch (action.type) {
         case AuthActionType.SetState:
-            newState.loggedIn = !!action.payload;
+            newState.user = action.payload;
             break;
         case AuthActionType.GetState:
 
@@ -28,5 +29,3 @@ export function authReducer(currentState: AuthState, action: AuthAction): AuthSt
     
     return newState;
 }
-
-export const authStore = createStore(authReducer, {loggedIn: false});

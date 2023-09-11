@@ -1,16 +1,19 @@
 import { OkPacket } from "mysql";
-import dal from "../2-utils/dal";
 import cyber from "../2-utils/cyber";
-import { ResourceNotFoundError, UnauthorizedError, ValidationError } from "../3-models/client-errors";
-import UserModel from "../3-models/user-model";
-import CredentialsModel from "../3-models/credentials-model";
+import dal from "../2-utils/dal";
 import logger from "../2-utils/logger";
+import { UnauthorizedError, ValidationError } from "../3-models/client-errors";
+import CredentialsModel from "../3-models/credentials-model";
+import UserModel from "../3-models/user-model";
+import { Request } from "express";
 
-async function register(user: UserModel): Promise<string> {
-    console.log(user);
-    
+export type AuthResult = {
+    token: string,
+    user: UserModel
+}
+
+async function register(user: UserModel): Promise<AuthResult> {   
     const error = user.validate();
-    console.log(error);
     
     if (error) throw new ValidationError(error);
 
@@ -27,10 +30,10 @@ async function register(user: UserModel): Promise<string> {
 
     const token = cyber.getNewToken(user);
 
-    return token;
+    return { token: token, user: user };
 }
 
-async function login(credentials: CredentialsModel): Promise<string> {
+async function login(credentials: CredentialsModel): Promise<AuthResult> {
 
     const error = credentials.validate();
     if (error) throw new ValidationError(error);
@@ -48,7 +51,7 @@ async function login(credentials: CredentialsModel): Promise<string> {
 
     const token = cyber.getNewToken(user);
 
-    return token;
+    return { token: token, user: user };
 }
 
 async function logout(token: string): Promise<string> {
@@ -57,6 +60,15 @@ async function logout(token: string): Promise<string> {
 
 
     return token;
+}
+
+// Used to refresh the logged-in status of the user with the access token cookie:
+async function refresh(request: Request): Promise<UserModel> {
+    const token = await cyber.verifyToken(request);
+    if(!token) return null;
+
+    const user = cyber.getUserFromToken(token);
+    return user;
 }
 
 async function isEmailTaken(email: string): Promise<boolean> {
@@ -72,5 +84,6 @@ async function isEmailTaken(email: string): Promise<boolean> {
 export default {
     register,
     login,
-    logout
+    logout,
+    refresh
 }

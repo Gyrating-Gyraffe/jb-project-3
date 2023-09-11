@@ -1,10 +1,23 @@
 import CssBaseline from "@mui/material/CssBaseline";
 import { ThemeProvider, createTheme } from '@mui/material/styles';
-import Menu from "../Menu/Menu";
+import Menu from "../Menu/NavBar";
 
 import Routing from "../Routing/Routing";
+import { useDispatch } from "react-redux";
+import { useEffect } from "react";
+import authService from "../../../Services/AuthService";
+import { AuthActionType } from "../../../Redux/AuthState";
 
 function Layout(): JSX.Element {
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        authService.refresh()
+            .then(user => dispatch({ type: AuthActionType.SetState, payload: user }))
+            .catch();
+
+    }, [])
+
     const theme = createTheme({
         palette: {
             primary: {

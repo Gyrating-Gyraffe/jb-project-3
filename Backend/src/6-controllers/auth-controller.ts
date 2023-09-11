@@ -1,18 +1,21 @@
-import express, { Request, Response, NextFunction } from "express";
-import UserModel from "../3-models/user-model";
+import express, { NextFunction, Request, Response } from "express";
 import CredentialsModel from "../3-models/credentials-model";
-import authService from "../5-services/auth-service";
-import blockNonLoggedIn from "../4-middleware/block-non-logged-in";
+import UserModel from "../3-models/user-model";
+import authService, { AuthResult } from "../5-services/auth-service";
 
 const router = express.Router();
 
 router.post("/auth/register", async (request: Request, response: Response, next: NextFunction) => {
     try {
         const user = new UserModel(request.body);
-        const token = await authService.register(user);
+        const result: AuthResult = await authService.register(user);
 
-        response.cookie('access_token', token, { httpOnly: true, secure: true });
-        response.status(201).send();
+        // Don't pass user ID and isAdmin to client
+        delete result.user.userId;
+        delete result.user.isAdmin;
+
+        response.cookie('access_token', result.token, { httpOnly: true, secure: true });
+        response.status(201).json(result.user);
     }
     catch(err: any) {
         next(err);
@@ -22,10 +25,31 @@ router.post("/auth/register", async (request: Request, response: Response, next:
 router.post("/auth/login", async (request: Request, response: Response, next: NextFunction) => {
     try {
         const credentials = new CredentialsModel(request.body);
-        const token = await authService.login(credentials);
+        const result: AuthResult = await authService.login(credentials);
 
-        response.cookie('access_token', token, { httpOnly: true, secure: true });
-        response.status(200).send();
+        // Don't pass user ID and isAdmin to client
+        delete result.user.userId;
+        delete result.user.isAdmin;
+
+        response.cookie('access_token', result.token, { httpOnly: true, secure: true });
+        response.status(200).json(result.user);
+    }
+    catch(err: any) {
+        next(err);
+    }
+});
+
+// The refresh API is in stealth - It *should not throw errors*, only notify on success.
+router.post("/auth/refresh", async (request: Request, response: Response, next: NextFunction) => {
+    try {     
+        const user: UserModel = await authService.refresh(request);
+        if(!user) next();
+
+        // Don't pass user ID and isAdmin to client
+        delete user.userId;
+        delete user.isAdmin;
+
+        response.status(200).json(user);
     }
     catch(err: any) {
         next(err);

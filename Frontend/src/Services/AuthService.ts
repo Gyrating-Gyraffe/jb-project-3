@@ -6,24 +6,41 @@ import UserModel from "../Models/UserModel";
 
 
 class AuthService {
-    public async login(credentials: CredentialsModel): Promise<boolean> {
+    public async login(credentials: CredentialsModel): Promise<UserModel | boolean> {
         try {
-            await axios.post(appConfig.serverUrl + "auth/login", credentials, { withCredentials: true });
+            const response = await axios.post(appConfig.serverUrl + "auth/login", credentials, { withCredentials: true });
+
+            const returnedUser: UserModel = response.data;
 
             notifyService.success("Logged in successfully");
-            return true;
+            return returnedUser || false;
         }
         catch (err: any) { notifyService.error(err); return false; }
     }
 
-    public async register(user: UserModel): Promise<boolean> {
+    public async register(user: UserModel): Promise<UserModel | boolean> {
         try {
-            await axios.post(appConfig.serverUrl + "auth/register", user, { withCredentials: true });
+            const response = await axios.post(appConfig.serverUrl + "auth/register", user, { withCredentials: true });
+
+            const returnedUser: UserModel = response.data;
 
             notifyService.success("Registered successfully");
-            return true;
+            return returnedUser || false;
         }
         catch (err: any) { notifyService.error(err); return false; }
+    }
+
+    // Sends a request with an empty body. Request is checked in the server for an access token cookie, and a user model is returned if valid:
+    public async refresh(): Promise<UserModel | boolean> {
+        try {
+            const response = await axios.post(appConfig.serverUrl + "auth/refresh", "", { withCredentials: true });
+
+            const returnedUser: UserModel = response.data;
+
+            notifyService.success(`Welcome back, ${returnedUser.firstName}`);
+            return returnedUser || false;
+        }
+        catch(err: any) { notifyService.error(err); return false; }
     }
 }
 

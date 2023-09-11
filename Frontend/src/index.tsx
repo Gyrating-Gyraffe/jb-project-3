@@ -7,14 +7,22 @@ import { BrowserRouter } from 'react-router-dom';
 import Layout from './Components/LayoutArea/Layout/Layout';
 import './index.css';
 import reportWebVitals from './reportWebVitals';
+import { Provider } from 'react-redux';
+import { createStore } from 'redux';
+import { authReducer } from './Redux/AuthState';
+
+
+const authStore = createStore(authReducer, {user: null});
 
 const root = ReactDOM.createRoot(
     document.getElementById('root') as HTMLElement
 );
 root.render(
-    <BrowserRouter>
-        <Layout />
-    </BrowserRouter>
+    <Provider store={authStore}>
+        <BrowserRouter>
+            <Layout />
+        </BrowserRouter>
+    </Provider>
 );
 
 // If you want to start measuring performance in your app, pass a function

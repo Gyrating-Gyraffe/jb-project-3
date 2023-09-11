@@ -1,13 +1,18 @@
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import { Avatar, Box, Button, Checkbox, CssBaseline, FormControlLabel, Grid, Link, Paper, TextField, Typography } from "@mui/material";
 import * as React from 'react';
+import { useDispatch } from 'react-redux';
 import { NavLink, useNavigate } from 'react-router-dom';
 import CredentialsModel from '../../../Models/CredentialsModel';
+import UserModel from '../../../Models/UserModel';
+import { AuthActionType } from '../../../Redux/AuthState';
 import authService from '../../../Services/AuthService';
 import Copyright from '../../LayoutArea/Copyright/Copyright';
 
+
 function Login(): JSX.Element {
     const navigate = useNavigate();
+    const dispatch = useDispatch();
 
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
@@ -17,9 +22,9 @@ function Login(): JSX.Element {
             password: data.get('password').toString(),
         });
         authService.login(credentials)
-            .then(res => {
+            .then((res: UserModel | boolean) => {
                 res ? navigate('/home') : navigate('/login');
-                // Tell client we're now logged in.
+                dispatch({ type: AuthActionType.SetState, payload: res });
             })
             .catch();
     };
