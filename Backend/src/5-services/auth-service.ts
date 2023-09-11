@@ -7,11 +7,14 @@ import CredentialsModel from "../3-models/credentials-model";
 import logger from "../2-utils/logger";
 
 async function register(user: UserModel): Promise<string> {
-
+    console.log(user);
+    
     const error = user.validate();
+    console.log(error);
+    
     if (error) throw new ValidationError(error);
 
-    if (await isEmailTaken(user.email)) throw new ValidationError(`email ${user.email} already taken`);
+    if (await isEmailTaken(user.email)) throw new ValidationError(`Email is already registered`);
 
     user.password = cyber.hashPassword(user.password);
 

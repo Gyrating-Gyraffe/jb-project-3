@@ -19,9 +19,9 @@ class UserModel {
 
     public static validationSchema = Joi.object({
         userId: Joi.number().optional().integer().positive(),
-        firstName: Joi.string().required().min(2).max(30),
-        lastName: Joi.string().required().min(2).max(100),
-        email: Joi.string().required().min(2).max(100),
+        firstName: Joi.string().required().min(2).max(30).pattern(/^[a-z]+$/i).message("First name must be between 2 to 30 characters. Alphabetical letters only."),
+        lastName: Joi.string().required().min(2).max(100).pattern(/^[a-z]+$/i).message("Last name must be between 2 to 100 characters. Alphabetical letters only."),
+        email: Joi.string().required().min(2).max(100).email(),
         password: Joi.string().required().min(4).max(128),
         isAdmin: Joi.number().optional().min(0).max(1)
     });

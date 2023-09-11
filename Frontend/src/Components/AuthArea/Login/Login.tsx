@@ -4,7 +4,6 @@ import * as React from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import CredentialsModel from '../../../Models/CredentialsModel';
 import authService from '../../../Services/AuthService';
-import notifyService from '../../../Services/NotifyService';
 import Copyright from '../../LayoutArea/Copyright/Copyright';
 
 function Login(): JSX.Element {
@@ -19,10 +18,10 @@ function Login(): JSX.Element {
         });
         authService.login(credentials)
             .then(res => {
-                navigate('/home');
+                res ? navigate('/home') : navigate('/login');
                 // Tell client we're now logged in.
             })
-            .catch(err => notifyService.error(err));
+            .catch();
     };
 
     return (

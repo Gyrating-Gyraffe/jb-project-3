@@ -1,5 +1,5 @@
 class UserModel {
-    public userId: number;
+    public userId?: number;
     public firstName: string;
     public lastName: string;
     public email: string;

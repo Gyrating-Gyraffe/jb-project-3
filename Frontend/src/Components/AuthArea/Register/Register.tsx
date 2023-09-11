@@ -1,18 +1,26 @@
 import AppRegistrationOutlinedIcon from '@mui/icons-material/AppRegistrationOutlined';
 import { Avatar, Box, Button, Checkbox, Container, FormControlLabel, Grid, Link, TextField, Typography } from '@mui/material';
 import * as React from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
+import UserModel from '../../../Models/UserModel';
+import authService from '../../../Services/AuthService';
 import Copyright from '../../LayoutArea/Copyright/Copyright';
 
 function Register(): JSX.Element {
+    const navigate = useNavigate();
 
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         const data = new FormData(event.currentTarget);
-        console.log({
-            email: data.get('email'),
-            password: data.get('password'),
+        const user = new UserModel({
+            firstName: data.get('firstName').toString(),
+            lastName: data.get('lastName').toString(),
+            email: data.get('email').toString(),
+            password: data.get('password').toString(),
         });
+        authService.register(user)
+            .then(res => res ? navigate('/home') : navigate('/register'))
+            .catch();
     };
 
     return (
