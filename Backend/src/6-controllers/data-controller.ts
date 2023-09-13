@@ -9,7 +9,7 @@ import dataService from "../5-services/data-service";
 
 const router = express.Router();
 
-router.get("/vacations", blockNonLoggedIn, async (request: Request, response: Response, next: NextFunction) => {
+router.get("/vacations", async (request: Request, response: Response, next: NextFunction) => {
     try {
         const vacations: VacationModel[] = await dataService.getAllVacations();
 

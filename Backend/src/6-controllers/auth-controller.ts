@@ -43,7 +43,7 @@ router.post("/auth/login", async (request: Request, response: Response, next: Ne
 router.post("/auth/refresh", async (request: Request, response: Response, next: NextFunction) => {
     try {     
         const user: UserModel = await authService.refresh(request);
-        if(!user) next();
+        if(!user) return;
 
         // Don't pass user ID and isAdmin to client
         delete user.userId;
