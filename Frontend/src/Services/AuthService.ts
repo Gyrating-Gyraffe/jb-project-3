@@ -31,9 +31,9 @@ class AuthService {
     }
 
     // Sends a request with an empty body. Request is checked in the server for an access token cookie, and a user model is returned if valid:
-    public async refresh(): Promise<UserModel | boolean> {
+    public async relog(): Promise<UserModel | boolean> {
         try {
-            const response = await axios.post(appConfig.serverUrl + "auth/refresh", "", { withCredentials: true });
+            const response = await axios.post(appConfig.serverUrl + "auth/relog", "", { withCredentials: true });
 
             const returnedUser: UserModel = response.data;
 

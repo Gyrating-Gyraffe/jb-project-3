@@ -12,7 +12,7 @@ function Layout(): JSX.Element {
     const dispatch = useDispatch();
 
     useEffect(() => {
-        authService.refresh()
+        authService.relog()
             .then(user => dispatch({ type: AuthActionType.SetState, payload: user }))
             .catch();
 

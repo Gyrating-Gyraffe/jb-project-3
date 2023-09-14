@@ -6,7 +6,8 @@ const connection = mysql.createPool({
     host: appConfig.host,
     user: appConfig.user,
     password: appConfig.password,
-    database: appConfig.database
+    database: appConfig.database,
+    multipleStatements: true
 });
 
 // Execute any sql: 

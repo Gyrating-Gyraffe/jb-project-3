@@ -8,3 +8,4 @@
 7. Hash password on client-side before sending over HTTP request.
 
 8. Implement rate limiting
+9. Only show "Welcome back" on first refresh. Use session storage to store state. 

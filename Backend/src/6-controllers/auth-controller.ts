@@ -2,6 +2,7 @@ import express, { NextFunction, Request, Response } from "express";
 import CredentialsModel from "../3-models/credentials-model";
 import UserModel from "../3-models/user-model";
 import authService, { AuthResult } from "../5-services/auth-service";
+import requireToken from "../4-middleware/require-token";
 
 const router = express.Router();
 
@@ -39,15 +40,14 @@ router.post("/auth/login", async (request: Request, response: Response, next: Ne
     }
 });
 
-// The refresh API is in stealth - It *should not throw errors*, only notify on success.
-router.post("/auth/refresh", async (request: Request, response: Response, next: NextFunction) => {
+// The relog API is in stealth - It *should not throw errors*, only notify on success.
+router.post("/auth/relog", requireToken, async (request: Request, response: Response, next: NextFunction) => {
     try {     
-        const user: UserModel = await authService.refresh(request);
+        const user: UserModel = await authService.relog(request);
         if(!user) return;
 
-        // Don't pass user ID and isAdmin to client
+        // Don't pass user ID
         delete user.userId;
-        delete user.isAdmin;
 
         response.status(200).json(user);
     }

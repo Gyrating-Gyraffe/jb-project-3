@@ -12,9 +12,9 @@ export type AuthResult = {
     user: UserModel
 }
 
-async function register(user: UserModel): Promise<AuthResult> {   
+async function register(user: UserModel): Promise<AuthResult> {
     const error = user.validate();
-    
+
     if (error) throw new ValidationError(error);
 
     if (await isEmailTaken(user.email)) throw new ValidationError(`Email is already registered`);
@@ -42,7 +42,7 @@ async function login(credentials: CredentialsModel): Promise<AuthResult> {
 
     // SQL-Injection secured:
     const sql = "SELECT * FROM users WHERE email = ? AND password = ?";
-    
+
     const users = await dal.execute(sql, [credentials.email, credentials.password]);
 
     if (users.length === 0) throw new UnauthorizedError("Incorrect email or password");
@@ -55,35 +55,80 @@ async function login(credentials: CredentialsModel): Promise<AuthResult> {
 }
 
 async function logout(token: string): Promise<string> {
-    
+
 
 
 
     return token;
 }
 
-// Used to refresh the logged-in status of the user with the access token cookie:
-async function refresh(request: Request): Promise<UserModel> {
-    const token = await cyber.verifyToken(request);
-    if(!token) return null;
+// Used to relog the user with the access token cookie:
+async function relog(request: Request): Promise<UserModel> {
+    const { token } = await cyber.verifyToken(request);
+    if (!token) return null;
 
     const user = cyber.getUserFromToken(token);
     return user;
+
 }
 
+// Check the database if a given user (User Model) is an admin:
+async function isAdmin(user: UserModel): Promise<boolean> {
+    if (!user?.userId) return null;
+
+    const sql = `SELECT * FROM users WHERE userId = ? AND isAdmin = 1`;
+    const result = await dal.execute(sql, [user.userId]);
+
+    // Turn resulting array (from DB query) into a boolean value:
+    return !!result;
+
+}
+
+// Adds a refresh token related to a given user:
+async function addRefreshToken(user: UserModel, token: string): Promise<boolean> {
+    if (!user?.userId) return null;
+
+    // SQL Query first deletes existing tokens for the given user, then inserts a new one:
+    // NOTE: MySQL supports atomicity - these two actions either both fail or both succeed.
+    const sql = `DELETE FROM refresh_tokens WHERE userId = ?;
+                INSERT INTO refresh_tokens VALUES(DEFAULT, ?, ?);`;
+    const info: OkPacket = await dal.execute(sql, [user.userId, token, user.userId]);
+
+    const insertId = info.insertId;
+
+    return !!insertId;
+}
+
+// Gets the refresh token matching the user's id. If none, returns null:
+async function getRefreshToken(user: UserModel): Promise<string> {
+    if (!user?.userId) return null;
+
+    const sql = `SELECT token FROM refresh_tokens WHERE userId = ?`;
+    const response = await dal.execute(sql, [user.userId]);
+
+    const refreshToken = response[0].token;
+
+    return refreshToken || null;
+}
+
+// Check database to see if a given email is taken:
 async function isEmailTaken(email: string): Promise<boolean> {
-    
+
     const sql = `SELECT COUNT(*) as count FROM users WHERE email = ?`;
-    
+
     // Uses destructuring assignment to get 'count' from the 'RowPacketData' returned object:
     const { count } = (await dal.execute(sql, [email]))[0];
 
     return count > 0;
 }
 
+
 export default {
     register,
     login,
     logout,
-    refresh
+    relog,
+    isAdmin,
+    getRefreshToken,
+    addRefreshToken
 }

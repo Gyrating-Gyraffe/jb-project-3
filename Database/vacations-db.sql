@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Sep 13, 2023 at 05:38 PM
+-- Generation Time: Sep 14, 2023 at 03:27 PM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.2.4
 
@@ -33,6 +33,36 @@ CREATE TABLE `followers` (
   `userId` int(11) NOT NULL,
   `vacationId` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='Many to many - users to vacations.';
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `refresh_tokens`
+--
+
+CREATE TABLE `refresh_tokens` (
+  `id` int(11) NOT NULL,
+  `token` varchar(2000) NOT NULL,
+  `userId` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `refresh_tokens`
+--
+
+INSERT INTO `refresh_tokens` (`id`, `token`, `userId`) VALUES
+(9, 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7InVzZXJJZCI6MSwiZmlyc3ROYW1lIjoiU2lsdmlhIiwibGFzdE5hbWUiOiJJbXBlcnZhIiwiZW1haWwiOiJpbXBlcnZpYUBnbWFpbC5jb20iLCJpc0FkbWluIjowfSwiaWF0IjoxNjk0NjQ5NjU4LCJleHAiOjE2OTUyNTQ0NTh9.Dm7PiMeepfxmgyw52AoDVxn35JtyVX0cfrhuwFpKG5U', 1);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `token_blacklist`
+--
+
+CREATE TABLE `token_blacklist` (
+  `id` int(11) NOT NULL,
+  `token` varchar(2000) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -100,6 +130,19 @@ ALTER TABLE `followers`
   ADD KEY `vacationId` (`vacationId`);
 
 --
+-- Indexes for table `refresh_tokens`
+--
+ALTER TABLE `refresh_tokens`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `userId` (`userId`);
+
+--
+-- Indexes for table `token_blacklist`
+--
+ALTER TABLE `token_blacklist`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `users`
 --
 ALTER TABLE `users`
@@ -114,6 +157,18 @@ ALTER TABLE `vacations`
 --
 -- AUTO_INCREMENT for dumped tables
 --
+
+--
+-- AUTO_INCREMENT for table `refresh_tokens`
+--
+ALTER TABLE `refresh_tokens`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=42;
+
+--
+-- AUTO_INCREMENT for table `token_blacklist`
+--
+ALTER TABLE `token_blacklist`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `users`
@@ -137,6 +192,12 @@ ALTER TABLE `vacations`
 ALTER TABLE `followers`
   ADD CONSTRAINT `followers_ibfk_2` FOREIGN KEY (`vacationId`) REFERENCES `vacations` (`vacationId`),
   ADD CONSTRAINT `followers_ibfk_3` FOREIGN KEY (`userId`) REFERENCES `users` (`userId`);
+
+--
+-- Constraints for table `refresh_tokens`
+--
+ALTER TABLE `refresh_tokens`
+  ADD CONSTRAINT `refresh_tokens_ibfk_1` FOREIGN KEY (`userId`) REFERENCES `users` (`userId`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
