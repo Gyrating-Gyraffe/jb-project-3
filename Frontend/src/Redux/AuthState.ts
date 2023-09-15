@@ -20,12 +20,16 @@ export function authReducer(currentState: AuthState, action: AuthAction): AuthSt
     switch (action.type) {
         case AuthActionType.SetState:
             newState.user = action.payload;
+            console.log("SETTING STATE");
             break;
         case AuthActionType.GetState:
 
             break;
     }
-    console.log(newState);
     
     return newState;
 }
+
+const authStore = createStore(authReducer, { user: null } as AuthState);
+
+export default authStore;

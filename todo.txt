@@ -10,3 +10,6 @@
 8. Implement rate limiting
 9. Only show "Welcome back" on first refresh. Use session storage to store state. 
 10. Token logic: If access token is valid but refresh token isn't, currently user gets access. Decide how to handle.
+11. Token Logic: Currently when the user logs out the system removes all refresh tokens associated with the user. 
+    This means that the user is logged out of all their devices. The issue is that using my system both the token refresh   
+    and logout happen simultaneously. This makes it hard to lock onto the UUID pair that is relevant for deletion.

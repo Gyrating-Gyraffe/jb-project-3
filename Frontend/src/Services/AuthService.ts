@@ -3,6 +3,7 @@ import CredentialsModel from "../Models/CredentialsModel";
 import appConfig from "../Utils/AppConfig";
 import notifyService from "./NotifyService";
 import UserModel from "../Models/UserModel";
+import authStore, { AuthActionType } from "../Redux/AuthState";
 
 
 class AuthService {
@@ -37,8 +38,27 @@ class AuthService {
 
             const returnedUser: UserModel = response.data;
 
+            // Update Redux state:
+            authStore.dispatch({ type: AuthActionType.SetState, payload: returnedUser });
+
             notifyService.success(`Welcome back, ${returnedUser.firstName}`);
             return returnedUser || false;
+        }
+        catch(err: any) { notifyService.error(err); return false; }
+    }
+
+    public async logout(): Promise<boolean> {
+        try {
+            const response = await axios.post(appConfig.serverUrl + "auth/logout", "", { withCredentials: true });
+
+            // Status other than 204(No content) means we failed to log out:
+            if(response.status !== 204) return false;
+
+            // Update Redux state:
+            authStore.dispatch({ type: AuthActionType.SetState, payload: null });
+
+            notifyService.success(`Logged out successfully`);
+            return true;
         }
         catch(err: any) { notifyService.error(err); return false; }
     }

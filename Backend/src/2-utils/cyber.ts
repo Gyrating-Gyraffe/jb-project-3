@@ -1,32 +1,47 @@
-import { Request } from "express";
-import jwt, { JsonWebTokenError, JwtPayload, TokenExpiredError } from "jsonwebtoken";
-import UserModel from "../3-models/user-model";
+/* --- NOTES: Decoding access tokens for UUID might create overhead as project scales. */
 import crypto from "crypto";
+import jwt, { JsonWebTokenError, TokenExpiredError } from "jsonwebtoken";
+import ExpandedRequest from "../3-models/expanded-request";
+import UserModel from "../3-models/user-model";
 import authService from "../5-services/auth-service";
+import uuid from "./uuid";
 
 const jwtSecretKey = "HU%vn@fFpv&@6j7R2uy*";
 
-function getNewToken(user: UserModel): string {
+interface AuthTokenPayload {
+    user: UserModel;
+    clientUUID: string
+}
+
+function getNewToken(user: UserModel, oldUUID?: string): string {
+
+    // No old UUID means we're registering or logging in:
+    if (!oldUUID) oldUUID = 'new';
 
     // Remove password from token:
     delete user.password;
 
+    // Generate a client-specific UUID for the tokens:
+    const clientUUID = uuid.generate();
+
+    // Payload for the tokens:
+    const payload = { user, clientUUID } as AuthTokenPayload;
+
     // Create refresh token:
     const refreshTokenOptions = { expiresIn: "7d" };
-    const refreshToken = jwt.sign({ user }, jwtSecretKey, refreshTokenOptions);
+    const refreshToken = jwt.sign(payload, jwtSecretKey, refreshTokenOptions);
 
     // Add refresh token to DB:
     try {
-        authService.addRefreshToken(user, refreshToken);
+        authService.addRefreshToken(user, oldUUID, clientUUID, refreshToken);
     }
     catch (err: any) {
         console.log(err);
     }
 
     // Create access token:
-    const container = { user };
-    const options = { expiresIn: "10m" };
-    const accessToken = jwt.sign(container, jwtSecretKey, options);
+    const accessTokenOptions = { expiresIn: "10s" };
+    const accessToken = jwt.sign(payload, jwtSecretKey, accessTokenOptions);
     return accessToken;
 }
 
@@ -37,7 +52,7 @@ type VerificationResult = {
 }
 
 // Verifies token in HTTP request and returns it if valid:
-function verifyToken(request: Request): Promise<VerificationResult> {
+function verifyToken(request: ExpandedRequest): Promise<VerificationResult> {
     return new Promise<VerificationResult>((resolve, reject) => {
         try {
             const token = request.cookies.access_token;
@@ -46,12 +61,22 @@ function verifyToken(request: Request): Promise<VerificationResult> {
             if (!token) resolve(null);
 
             // Verify the token:
-            jwt.verify(token, jwtSecretKey, (err: JsonWebTokenError) => {
+            jwt.verify(token, jwtSecretKey, (err: JsonWebTokenError, decoded: AuthTokenPayload) => {
+
+                // Save the user object and clientUUID in the expanded request:
+                saveTokenPayloadToRequest(decoded, request);
 
                 // In case of error:
                 if (err) {
-                    if (err instanceof TokenExpiredError)
+                    if (err instanceof TokenExpiredError) {
+                        // Force a decode for expired token:
+                        decoded = jwt.decode(token) as AuthTokenPayload;
+
+                        // Save the user object and clientUUID in the expanded request:
+                        saveTokenPayloadToRequest(decoded, request);
+
                         resolve({ token: token, err: err });
+                    }
                     else
                         resolve({ token: null, err: err });
                 }
@@ -89,13 +114,17 @@ function verifyRefreshToken(token: string): Promise<VerificationResult> {
     });
 }
 
-// Gets token string and returns user:
-function getUserFromToken(token: string): UserModel {
-    const payload = jwt.decode(token) as JwtPayload;
+// Gets decoded token and saves payload and saves user object in request params (In case required by middleware):
+function saveTokenPayloadToRequest(decoded: AuthTokenPayload, request: ExpandedRequest): void {
 
-    // If no payload or no user in payload return:
-    if (!payload?.user) return;
-    return payload.user;
+    // Partial or missing payload:
+    if (!decoded?.user || !decoded?.clientUUID) return;
+
+    // Add user object to request:
+    request.user = decoded.user;
+
+    // Add clientUUID to request:
+    request.clientUUID = decoded.clientUUID;
 }
 
 // Hash salt: 
@@ -119,6 +148,5 @@ export default {
     getNewToken,
     verifyToken,
     verifyRefreshToken,
-    getUserFromToken,
     hashPassword
 };

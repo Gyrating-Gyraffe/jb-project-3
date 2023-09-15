@@ -3,16 +3,12 @@ import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
 import ReactDOM from 'react-dom/client';
+import { Provider } from 'react-redux';
 import { BrowserRouter } from 'react-router-dom';
 import Layout from './Components/LayoutArea/Layout/Layout';
+import authStore from './Redux/AuthState';
 import './index.css';
 import reportWebVitals from './reportWebVitals';
-import { Provider } from 'react-redux';
-import { createStore } from 'redux';
-import { authReducer } from './Redux/AuthState';
-
-
-const authStore = createStore(authReducer, {user: null});
 
 const root = ReactDOM.createRoot(
     document.getElementById('root') as HTMLElement

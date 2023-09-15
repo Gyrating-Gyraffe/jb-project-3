@@ -4,8 +4,8 @@ import dal from "../2-utils/dal";
 import logger from "../2-utils/logger";
 import { UnauthorizedError, ValidationError } from "../3-models/client-errors";
 import CredentialsModel from "../3-models/credentials-model";
+import ExpandedRequest from "../3-models/expanded-request";
 import UserModel from "../3-models/user-model";
-import { Request } from "express";
 
 export type AuthResult = {
     token: string,
@@ -54,22 +54,22 @@ async function login(credentials: CredentialsModel): Promise<AuthResult> {
     return { token: token, user: user };
 }
 
-async function logout(token: string): Promise<string> {
+// Deletes refresh token from database, logging the user out:
+async function logout(user: UserModel, clientUUID: string): Promise<boolean> {
+    console.log("UUID: " + clientUUID);
+    
+    const sql = `DELETE FROM refresh_tokens WHERE userId = ?;`
 
+    const info: OkPacket = await dal.execute(sql, [user.userId]);
 
-
-
-    return token;
+    return info.affectedRows > 0;
 }
 
-// Used to relog the user with the access token cookie:
-async function relog(request: Request): Promise<UserModel> {
-    const { token } = await cyber.verifyToken(request);
-    if (!token) return null;
-
-    const user = cyber.getUserFromToken(token);
-    return user;
-
+// Relog the frontend with the user info from the access token cookie:
+async function relog(request: ExpandedRequest): Promise<UserModel> {
+    if(!request.user) throw new UnauthorizedError("You are not logged in");
+    
+    return request.user;
 }
 
 // Check the database if a given user (User Model) is an admin:
@@ -81,30 +81,29 @@ async function isAdmin(user: UserModel): Promise<boolean> {
 
     // Turn resulting array (from DB query) into a boolean value:
     return !!result;
-
 }
 
 // Adds a refresh token related to a given user:
-async function addRefreshToken(user: UserModel, token: string): Promise<boolean> {
+async function addRefreshToken(user: UserModel, oldUUID: string, clientUUID: string, token: string): Promise<boolean> {
     if (!user?.userId) return null;
-
-    // SQL Query first deletes existing tokens for the given user, then inserts a new one:
-    // NOTE: MySQL supports atomicity - these two actions either both fail or both succeed.
-    const sql = `DELETE FROM refresh_tokens WHERE userId = ?;
-                INSERT INTO refresh_tokens VALUES(DEFAULT, ?, ?);`;
-    const info: OkPacket = await dal.execute(sql, [user.userId, token, user.userId]);
+    
+    // SQL Query first deletes existing tokens for the given client, then inserts a new one:
+    const sql = `DELETE FROM refresh_tokens WHERE clientUUID = ? AND userId = ?;
+                INSERT INTO refresh_tokens VALUES(DEFAULT, ?, ?, ?, DEFAULT);`;
+    
+    const info: OkPacket = await dal.execute(sql, [oldUUID, user.userId, token, user.userId, clientUUID]);
 
     const insertId = info.insertId;
 
     return !!insertId;
 }
 
-// Gets the refresh token matching the user's id. If none, returns null:
-async function getRefreshToken(user: UserModel): Promise<string> {
+// Gets the refresh token matching the client's UUID and the user's id. If none, returns null:
+async function getRefreshToken(user: UserModel, clientUUID: string): Promise<string> {
     if (!user?.userId) return null;
 
-    const sql = `SELECT token FROM refresh_tokens WHERE userId = ?`;
-    const response = await dal.execute(sql, [user.userId]);
+    const sql = `SELECT token FROM refresh_tokens WHERE clientUUID = ? AND userId = ? ORDER BY addDate DESC`;
+    const response = await dal.execute(sql, [clientUUID, user.userId]);
 
     const refreshToken = response[0].token;
 

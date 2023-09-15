@@ -3,11 +3,12 @@ import cyber from "../2-utils/cyber";
 import { ForbiddenError, UnauthorizedError } from "../3-models/client-errors";
 import UserModel from "../3-models/user-model";
 import authService from "../5-services/auth-service";
+import ExpandedRequest from "../3-models/expanded-request";
 
-async function blockNonAdmin(request: Request, response: Response, next: NextFunction) {
+async function blockNonAdmin(request: ExpandedRequest, response: Response, next: NextFunction) {
     try {
         const { token } = await cyber.verifyToken(request);
-        const user: UserModel = cyber.getUserFromToken(token);
+        const { user } = request;
         
 
         if(!token || !user) throw new UnauthorizedError("You are not logged in");
