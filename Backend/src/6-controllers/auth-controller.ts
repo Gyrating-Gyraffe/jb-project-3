@@ -11,9 +11,8 @@ router.post("/auth/register", async (request: Request, response: Response, next:
         const user = new UserModel(request.body);
         const result: AuthResult = await authService.register(user);
 
-        // Don't pass user ID and isAdmin to client
+        // Don't pass user ID to client:
         delete result.user.userId;
-        delete result.user.isAdmin;
 
         response.cookie('access_token', result.token, { httpOnly: true, secure: true });
         response.status(201).json(result.user);
@@ -28,9 +27,8 @@ router.post("/auth/login", async (request: Request, response: Response, next: Ne
         const credentials = new CredentialsModel(request.body);
         const result: AuthResult = await authService.login(credentials);
 
-        // Don't pass user ID and isAdmin to client
+        // Don't pass user ID to client:
         delete result.user.userId;
-        delete result.user.isAdmin;
 
         response.cookie('access_token', result.token, { httpOnly: true, secure: true });
         response.status(200).json(result.user);
@@ -46,7 +44,7 @@ router.post("/auth/relog", requireToken, async (request: Request, response: Resp
         const user: UserModel = await authService.relog(request);
         if(!user) return;
 
-        // Don't pass user ID
+        // Don't pass user ID to client:
         delete user.userId;
 
         response.status(200).json(user);

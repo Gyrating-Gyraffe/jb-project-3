@@ -25,7 +25,7 @@ function getNewToken(user: UserModel): string {
 
     // Create access token:
     const container = { user };
-    const options = { expiresIn: "5s" };
+    const options = { expiresIn: "10m" };
     const accessToken = jwt.sign(container, jwtSecretKey, options);
     return accessToken;
 }

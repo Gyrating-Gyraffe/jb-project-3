@@ -9,3 +9,4 @@
 
 8. Implement rate limiting
 9. Only show "Welcome back" on first refresh. Use session storage to store state. 
+10. Token logic: If access token is valid but refresh token isn't, currently user gets access. Decide how to handle.
