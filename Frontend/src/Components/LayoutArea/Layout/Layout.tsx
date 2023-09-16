@@ -11,8 +11,7 @@ function Layout(): JSX.Element {
     // Relog user on first layout render:
     useEffect(() => {
         authService.relog();
-
-    }, [])
+    }, []);
 
     const theme = createTheme({
         palette: {

@@ -8,7 +8,7 @@ import StatusCode from "../3-models/status-code";
 
 const router = express.Router();
 
-const authCookieOptions = { httpOnly: true, secure: true };
+const authCookieOptions = { httpOnly: true, secure: true, maxAge: 900000 };
 
 router.post("/auth/register", async (request: Request, response: Response, next: NextFunction) => {
     try {

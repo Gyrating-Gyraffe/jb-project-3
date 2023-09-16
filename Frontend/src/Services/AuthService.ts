@@ -4,6 +4,7 @@ import appConfig from "../Utils/AppConfig";
 import notifyService from "./NotifyService";
 import UserModel from "../Models/UserModel";
 import authStore, { AuthActionType } from "../Redux/AuthState";
+import sessionHandler from "../Utils/SessionHandler";
 
 
 class AuthService {
@@ -41,10 +42,20 @@ class AuthService {
             // Update Redux state:
             authStore.dispatch({ type: AuthActionType.SetState, payload: returnedUser });
 
-            notifyService.success(`Welcome back, ${returnedUser.firstName}`);
+            if(!sessionHandler.isFirstSessionLoad()) {
+                notifyService.success(`Welcome back, ${returnedUser.firstName}`);
+                sessionHandler.isFirstSessionLoad(true);
+            }
+
             return returnedUser || false;
         }
-        catch(err: any) { notifyService.error(err); return false; }
+        catch(err: any) { 
+            if(sessionHandler.isFirstSessionLoad()) {
+                notifyService.error(err); 
+                sessionHandler.isFirstSessionLoad(false);
+            }
+            return false; 
+        }
     }
 
     public async logout(): Promise<boolean> {

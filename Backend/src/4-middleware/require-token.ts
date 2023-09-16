@@ -32,7 +32,7 @@ async function requireToken(request: ExpandedRequest, response: Response, next: 
             }
             
             // If we got a new access token set it in response cookies:
-            response.cookie('access_token', newToken, { httpOnly: true, secure: true });
+            response.cookie('access_token', newToken, { httpOnly: true, secure: true, maxAge: 900000 });
             next();
         }
         else
