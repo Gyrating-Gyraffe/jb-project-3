@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Sep 14, 2023 at 03:27 PM
+-- Generation Time: Sep 20, 2023 at 11:54 AM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.2.4
 
@@ -43,15 +43,10 @@ CREATE TABLE `followers` (
 CREATE TABLE `refresh_tokens` (
   `id` int(11) NOT NULL,
   `token` varchar(2000) NOT NULL,
-  `userId` int(11) NOT NULL
+  `userId` int(11) NOT NULL,
+  `clientUUID` varchar(36) NOT NULL COMMENT 'Unique for a client login',
+  `addDate` datetime NOT NULL DEFAULT current_timestamp() COMMENT 'Not expiry date'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `refresh_tokens`
---
-
-INSERT INTO `refresh_tokens` (`id`, `token`, `userId`) VALUES
-(9, 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7InVzZXJJZCI6MSwiZmlyc3ROYW1lIjoiU2lsdmlhIiwibGFzdE5hbWUiOiJJbXBlcnZhIiwiZW1haWwiOiJpbXBlcnZpYUBnbWFpbC5jb20iLCJpc0FkbWluIjowfSwiaWF0IjoxNjk0NjQ5NjU4LCJleHAiOjE2OTUyNTQ0NTh9.Dm7PiMeepfxmgyw52AoDVxn35JtyVX0cfrhuwFpKG5U', 1);
 
 -- --------------------------------------------------------
 
@@ -85,7 +80,11 @@ CREATE TABLE `users` (
 
 INSERT INTO `users` (`userId`, `firstName`, `lastName`, `email`, `password`, `isAdmin`) VALUES
 (1, 'Silvia', 'Imperva', 'impervia@gmail.com', '11ab08fc77516e1c9e61fe8a66a0d87fd9e1bd84dbe680acd89d23297e8cbf00c45df21a901ae1f1674a78dca32627aaf8cc2597c1ca22a942e92e6928c3205d', 0),
-(2, 'John', 'Bryce', 'jb@gmail.com', '2c14b168ed74dea4f7d73a3b9abb03240c8897965b77f2fce96073894d91a6fa0b5f4e044d40fa223c1641a6feb0ac5b99e19aecd89776042c629e64421d742f', 1);
+(2, 'John', 'Bryce', 'jb@gmail.com', '2c14b168ed74dea4f7d73a3b9abb03240c8897965b77f2fce96073894d91a6fa0b5f4e044d40fa223c1641a6feb0ac5b99e19aecd89776042c629e64421d742f', 1),
+(11, 'Bart', 'Simpson', 'bart@gmail.com', '7787a15d89608296a0fd212028125fbf8e97f36f589dc643c0e6c8f4fa2b1f4e3fec4a96f38e6bb36bbaf666e71941106bc2f01bd08da9b65c0257e59b7ec13d', 0),
+(12, 'Salty', 'Bacon', 'eitanlander@gmail.com', 'bbe684867c78a6d4c2cb3c03f00438cdec1ff96b0d88c0af496c1f48454d752f7d607833509f5f1adec9cf91ad25a39036a0398026f45cd6127366a7b39f65d7', 0),
+(13, 'Redis', 'Sider', 'redis@gmail.com', 'c36902c1630ca9efcda1353482c02a0975f7113e4ce63963bd766d4ecaefb93f7206cf5fbc39eb948213fb4b10c97480d5a6ad184d0552594a94bc18599d4a1c', 0),
+(14, 'Roy', 'Maman', 'roy@gmail.com', '1a0d88afa943cf7ad9475c53eb23def2a9f8224292f7455db19d9df43f8fbed511acb845e4020898719e836816e08b6f3cfca3b44401ef82249dcee2045fdaa6', 0);
 
 -- --------------------------------------------------------
 
@@ -162,7 +161,7 @@ ALTER TABLE `vacations`
 -- AUTO_INCREMENT for table `refresh_tokens`
 --
 ALTER TABLE `refresh_tokens`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=42;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=254;
 
 --
 -- AUTO_INCREMENT for table `token_blacklist`
@@ -174,7 +173,7 @@ ALTER TABLE `token_blacklist`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `userId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `userId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- AUTO_INCREMENT for table `vacations`
