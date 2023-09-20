@@ -1,4 +1,5 @@
-import { Button, Card, CardActions, CardContent, CardMedia, Typography } from '@mui/material';
+import { Box, Button, Card, CardActions, CardContent, CardMedia, Typography } from '@mui/material';
+import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import VacationModel from '../../../Models/VacationModel';
 
 type VacationCardProps = {
@@ -25,8 +26,15 @@ function VacationCard(props: VacationCardProps): JSX.Element {
                 </Typography>
             </CardContent>
             {/* </CardActionArea> */}
-            <CardActions>
-                <Button size="small" color="secondary">
+            <CardActions sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', backgroundColor: 'secondary.100' }}>
+                
+                <Box width={'120%'}>
+                    <Typography gutterBottom variant="h5" component="div" sx={{ mt: 6 }} color={'#3b3b3b'}>
+                        <CalendarMonthIcon sx={{ margin: '0 2% 0 0' }} />
+                        {props.vacation.getVacationDateStrings()}
+                    </Typography>
+                </Box>
+                <Button size="large" color={'primary'} variant='contained'>
                     Follow
                 </Button>
             </CardActions>

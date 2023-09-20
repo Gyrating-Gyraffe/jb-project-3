@@ -42,7 +42,7 @@ function Home(): JSX.Element {
             <Container sx={{ py: 8 }} maxWidth="xl">
                 <Grid container spacing={4} justifyContent={'center'}>
                     {vacations && vacations.map((vacation, index) => (
-                        <VacationCard vacation={vacation} key={index} />
+                        <VacationCard vacation={new VacationModel(vacation)} key={index} />
                     ))}
                 </Grid>
             </Container>

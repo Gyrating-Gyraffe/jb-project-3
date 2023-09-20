@@ -17,9 +17,11 @@ function Layout(): JSX.Element {
         palette: {
             primary: {
                 main: `#d52e24`,
+                "100": `#f59e98`
             },
             secondary: {
                 main: `#24cbd5`,
+                "100": `#94ebf5`
             },
             action: {
                 active: '#24cbd5',

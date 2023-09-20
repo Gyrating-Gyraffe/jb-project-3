@@ -67,7 +67,7 @@ function verifyTokens(request: ExpandedRequest): Promise<VerificationResult> {
             const refreshToken = request.cookies.refresh_token;
 
             // If no refresh token in cookies:
-            if (!refreshToken) { resolve(null) };
+            if (!refreshToken) { resolve(null) }
             // If no access token in cookies:
             if (!accessToken) {
                 // Verify the refresh token:
@@ -79,7 +79,7 @@ function verifyTokens(request: ExpandedRequest): Promise<VerificationResult> {
                         }
                     })
                     .catch(err => reject(err));
-            };
+            }
 
             // Verify the access token:
             jwtVerify(request, accessToken)
