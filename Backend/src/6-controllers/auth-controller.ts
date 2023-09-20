@@ -18,7 +18,8 @@ router.post("/auth/register", async (request: Request, response: Response, next:
         // Don't pass user ID to client:
         delete result.user.userId;
 
-        response.cookie('access_token', result.token, authCookieOptions);
+        response.cookie('refresh_token', result.tokenPair.refresh_token, { ...authCookieOptions, maxAge: 2592000000 });
+        response.cookie('access_token', result.tokenPair.access_token, authCookieOptions);
         response.status(StatusCode.Created).json(result.user);
     }
     catch(err: any) {
@@ -34,7 +35,8 @@ router.post("/auth/login", async (request: Request, response: Response, next: Ne
         // Don't pass user ID to client:
         delete result.user.userId;
 
-        response.cookie('access_token', result.token, authCookieOptions);
+        response.cookie('refresh_token', result.tokenPair.refresh_token, { ...authCookieOptions, maxAge: 2592000000 });
+        response.cookie('access_token', result.tokenPair.access_token, authCookieOptions);
         response.json(result.user);
     }
     catch(err: any) {
@@ -42,7 +44,7 @@ router.post("/auth/login", async (request: Request, response: Response, next: Ne
     }
 });
 
-// The relog API is in stealth - It *should not throw errors*, only notify on success.
+// Relog the user using the tokens:
 router.post("/auth/relog", requireToken, async (request: ExpandedRequest, response: Response, next: NextFunction) => {
     try {     
         const user: UserModel = await authService.relog(request);
@@ -71,6 +73,7 @@ router.post("/auth/logout", requireToken, async (request: ExpandedRequest, respo
             throw new Error(`An error has occured while logging you out, please try again`); 
         }
 
+        response.cookie('refresh_token', '', { ...authCookieOptions, maxAge: 0 });
         response.cookie('access_token', '', { ...authCookieOptions, maxAge: 0 });
         response.status(StatusCode.NoContent).send();
     }

@@ -5,15 +5,22 @@ import ExpandedRequest from "../3-models/expanded-request";
 import UserModel from "../3-models/user-model";
 import authService from "../5-services/auth-service";
 import uuid from "./uuid";
+import { UnauthorizedError } from "../3-models/client-errors";
 
 const jwtSecretKey = "HU%vn@fFpv&@6j7R2uy*";
+
+export interface TokenPair {
+    access_token: string;
+    refresh_token: string;
+    clientUUID?: string;
+}
 
 interface AuthTokenPayload {
     user: UserModel;
     clientUUID: string
 }
 
-function getNewToken(user: UserModel, oldUUID?: string): string {
+async function getNewTokenPair(user: UserModel, oldUUID?: string): Promise<TokenPair> {
 
     // No old UUID means we're registering or logging in:
     if (!oldUUID) oldUUID = 'new';
@@ -33,16 +40,17 @@ function getNewToken(user: UserModel, oldUUID?: string): string {
 
     // Add refresh token to DB:
     try {
-        authService.addRefreshToken(user, oldUUID, clientUUID, refreshToken);
+        await authService.addRefreshToken(user, oldUUID, clientUUID, refreshToken);
     }
     catch (err: any) {
         console.log(err);
     }
 
     // Create access token:
-    const accessTokenOptions = { expiresIn: "10s" };
+    const accessTokenOptions = { expiresIn: "10m" };
     const accessToken = jwt.sign(payload, jwtSecretKey, accessTokenOptions);
-    return accessToken;
+
+    return { access_token: accessToken, refresh_token: refreshToken, clientUUID: clientUUID };
 }
 
 // Functions verifyToken and verifyRefreshToken use this type to communicate the result of verification:
@@ -52,43 +60,65 @@ type VerificationResult = {
 }
 
 // Verifies token in HTTP request and returns it if valid:
-function verifyToken(request: ExpandedRequest): Promise<VerificationResult> {
+function verifyTokens(request: ExpandedRequest): Promise<VerificationResult> {
     return new Promise<VerificationResult>((resolve, reject) => {
         try {
-            const token = request.cookies.access_token;
+            const accessToken = request.cookies.access_token;
+            const refreshToken = request.cookies.refresh_token;
 
+            // If no refresh token in cookies:
+            if (!refreshToken) { resolve(null) };
             // If no access token in cookies:
-            if (!token) resolve(null);
+            if (!accessToken) {
+                // Verify the refresh token:
+                jwtVerify(request, refreshToken)
+                    .then(result => {
+                        // Refresh token couldn't be verified:
+                        if (result.err || !result.token) {
+                            throw new UnauthorizedError('You are not logged in');
+                        }
+                    })
+                    .catch(err => reject(err));
+            };
 
-            // Verify the token:
-            jwt.verify(token, jwtSecretKey, (err: JsonWebTokenError, decoded: AuthTokenPayload) => {
-
-                // Save the user object and clientUUID in the expanded request:
-                saveTokenPayloadToRequest(decoded, request);
-
-                // In case of error:
-                if (err) {
-                    if (err instanceof TokenExpiredError) {
-                        // Force a decode for expired token:
-                        decoded = jwt.decode(token) as AuthTokenPayload;
-
-                        // Save the user object and clientUUID in the expanded request:
-                        saveTokenPayloadToRequest(decoded, request);
-
-                        resolve({ token: token, err: err });
-                    }
-                    else
-                        resolve({ token: null, err: err });
-                }
-
-                // Token valid:
-                resolve({ token: token, err: null });
-            });
+            // Verify the access token:
+            jwtVerify(request, accessToken)
+                .then(result => resolve(result))
+                .catch(err => reject(err));
         }
         catch (err: any) {
             reject(err);
         }
     });
+}
+
+function jwtVerify(request: ExpandedRequest, token: string): Promise<VerificationResult> {
+    return new Promise<VerificationResult>((resolve) => {
+        // Verify the token:
+        jwt.verify(token, jwtSecretKey, (err: JsonWebTokenError, decoded: AuthTokenPayload) => {
+
+            // Save the user object and clientUUID in the expanded request:
+            saveTokenPayloadToRequest(decoded, request);
+
+            // In case of error:
+            if (err) {
+                if (err instanceof TokenExpiredError) {
+                    // Force a decode for expired token:
+                    decoded = jwt.decode(token) as AuthTokenPayload;
+
+                    // Save the user object and clientUUID in the expanded request:
+                    saveTokenPayloadToRequest(decoded, request);
+
+                    resolve({ token: token, err: err });
+                }
+                else
+                    resolve({ token: null, err: err });
+            }
+
+            // Token valid:
+            resolve({ token: token, err: null });
+        });
+    })
 }
 
 // Verifies a given user's refresh token:
@@ -145,8 +175,8 @@ function hashPassword(plainText: string): string {
 
 
 export default {
-    getNewToken,
-    verifyToken,
+    getNewTokenPair,
+    verifyTokens,
     verifyRefreshToken,
     hashPassword
 };

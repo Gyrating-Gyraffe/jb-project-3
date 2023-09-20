@@ -4,7 +4,7 @@ import { UnauthorizedError } from "../3-models/client-errors";
 
 async function blockNonLoggedIn(request: Request, response: Response, next: NextFunction) {
     try {     
-        const token = await cyber.verifyToken(request);
+        const token = await cyber.verifyTokens(request);
         if(!token) throw new UnauthorizedError("You are not logged in");
         next();
     }

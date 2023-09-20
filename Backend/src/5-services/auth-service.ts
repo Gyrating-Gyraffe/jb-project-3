@@ -1,5 +1,5 @@
 import { OkPacket } from "mysql";
-import cyber from "../2-utils/cyber";
+import cyber, { TokenPair } from "../2-utils/cyber";
 import dal from "../2-utils/dal";
 import logger from "../2-utils/logger";
 import { UnauthorizedError, ValidationError } from "../3-models/client-errors";
@@ -8,7 +8,7 @@ import ExpandedRequest from "../3-models/expanded-request";
 import UserModel from "../3-models/user-model";
 
 export type AuthResult = {
-    token: string,
+    tokenPair: TokenPair,
     user: UserModel
 }
 
@@ -28,9 +28,9 @@ async function register(user: UserModel): Promise<AuthResult> {
     const info: OkPacket = await dal.execute(sql, [user.firstName, user.lastName, user.email, user.password, user.isAdmin || 'DEFAULT']);
     user.userId = info.insertId;
 
-    const token = cyber.getNewToken(user);
+    const tokenPair = await cyber.getNewTokenPair(user);
 
-    return { token: token, user: user };
+    return { tokenPair: tokenPair, user: user };
 }
 
 async function login(credentials: CredentialsModel): Promise<AuthResult> {
@@ -49,18 +49,18 @@ async function login(credentials: CredentialsModel): Promise<AuthResult> {
 
     const user = users[0];
 
-    const token = cyber.getNewToken(user);
+    const tokenPair = await cyber.getNewTokenPair(user);
 
-    return { token: token, user: user };
+    return { tokenPair: tokenPair, user: user };
 }
 
 // Deletes refresh token from database, logging the user out:
 async function logout(user: UserModel, clientUUID: string): Promise<boolean> {
     console.log("UUID: " + clientUUID);
-    
-    const sql = `DELETE FROM refresh_tokens WHERE userId = ?;`
 
-    const info: OkPacket = await dal.execute(sql, [user.userId]);
+    const sql = `DELETE FROM refresh_tokens WHERE userId = ? AND clientUUID = ?;`
+
+    const info: OkPacket = await dal.execute(sql, [user.userId, clientUUID]);
 
     return info.affectedRows > 0;
 }

@@ -1,13 +1,12 @@
-import { NextFunction, Request, Response } from "express";
+import { NextFunction, Response } from "express";
 import cyber from "../2-utils/cyber";
 import { ForbiddenError, UnauthorizedError } from "../3-models/client-errors";
-import UserModel from "../3-models/user-model";
-import authService from "../5-services/auth-service";
 import ExpandedRequest from "../3-models/expanded-request";
+import authService from "../5-services/auth-service";
 
 async function blockNonAdmin(request: ExpandedRequest, response: Response, next: NextFunction) {
     try {
-        const { token } = await cyber.verifyToken(request);
+        const { token } = await cyber.verifyTokens(request);
         const { user } = request;
         
 

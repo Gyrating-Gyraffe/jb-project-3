@@ -26,6 +26,9 @@ class AuthService {
 
             const returnedUser: UserModel = response.data;
 
+            // Update Redux state:
+            authStore.dispatch({ type: AuthActionType.SetState, payload: returnedUser });
+
             notifyService.success("Registered successfully");
             return returnedUser || false;
         }
