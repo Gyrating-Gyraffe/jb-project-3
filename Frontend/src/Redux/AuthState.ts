@@ -20,7 +20,6 @@ export function authReducer(currentState: AuthState, action: AuthAction): AuthSt
     switch (action.type) {
         case AuthActionType.SetState:
             newState.user = action.payload;
-            console.log("SETTING STATE");
             break;
         case AuthActionType.GetState:
 

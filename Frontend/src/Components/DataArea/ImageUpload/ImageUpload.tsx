@@ -3,6 +3,7 @@ import PhotoCamera from "@mui/icons-material/PhotoCamera";
 import IconButton from "@mui/material/IconButton";
 import Stack from "@mui/material/Stack";
 import { Container } from "@mui/material";
+import appConfig from "../../../Utils/AppConfig";
 
 type ImageUploadProps = {
     imageUrl?: string,
@@ -57,7 +58,7 @@ function ImageUpload(props: ImageUploadProps) {
                     </IconButton>
 
                 </label>
-                {imageUrl && <img src={imageUrl} alt="Uploaded Image" style={{ height: 'auto', maxWidth: '80%' }} />}
+                {<img src={imageUrl || `${appConfig.serverUrl}images/vacations/no-image.jpg`} alt="Uploaded Image" style={{ height: 'auto', maxWidth: '80%' }} />}
             </Stack>
         </Container>
     );

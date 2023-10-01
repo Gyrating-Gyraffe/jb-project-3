@@ -34,13 +34,10 @@ router.get("/vacations/:id", async (request: Request, response: Response, next: 
     }
 });
 
-router.post("/vacations", blockNonAdmin, async (request: Request, response: Response, next: NextFunction) => {
+router.post("/vacations", [requireToken, blockNonAdmin], async (request: ExpandedRequest, response: Response, next: NextFunction) => {
     try {
         // Add image from request.files into request.body:
         request.body.image = request.files?.image;
-
-        console.log(request.body);
-        
 
         const vacation = new VacationModel(request.body);
         
@@ -52,11 +49,10 @@ router.post("/vacations", blockNonAdmin, async (request: Request, response: Resp
     }
 });
 
-router.patch("/vacations/:id", blockNonAdmin, async (request: Request, response: Response, next: NextFunction) => {
+router.patch("/vacations/:id", [requireToken, blockNonAdmin], async (request: Request, response: Response, next: NextFunction) => {
     try {
-        request.body.id = +request.params.id;
+        request.body.vacationId = +request.params.id;
         const vacation = new VacationModel(request.body);
-        vacation.vacationId = request.body.id;
         await dataService.updateVacation(vacation);
         response.send();
     }

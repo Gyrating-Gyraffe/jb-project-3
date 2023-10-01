@@ -13,6 +13,8 @@ import { AuthState } from '../../../Redux/AuthState';
 import dataService from '../../../Services/DataService';
 import notifyService from '../../../Services/NotifyService';
 import appConfig from '../../../Utils/AppConfig';
+import countryFlag from '../../../Utils/CountryFlag';
+import Paper from '@mui/material/Paper';
 
 type VacationCardProps = {
     vacation: VacationModel;
@@ -23,10 +25,14 @@ function VacationCard(props: VacationCardProps): JSX.Element {
     const [followState, setFollowState] = useState<boolean>(false);
     const [userChangedFollow, setUserChangedFollow] = useState<boolean>(false);
 
+    const [flagUrl, setFlagUrl] = useState<string>('');
+
     const user = useSelector((state: AuthState) => state.user);
 
     // If user changed follow status, we increment the props.vacation.followerCount value with this:
     const followStatusIncrement = userChangedFollow ? (followState ? 1 : -1) : 0;
+
+    useEffect(() => { getFlag().then(res => setFlagUrl(res)).catch(err => console.log(err)) }, [])
 
     // On init and User change (Redux Auth State):
     useEffect(() => {
@@ -48,23 +54,33 @@ function VacationCard(props: VacationCardProps): JSX.Element {
             .catch(err => notifyService.error(err.message));
     }
 
+    function formatPrice(price: number): string {
+        if (price >= 1000) return (price.toLocaleString());
+    }
+
+    async function getFlag(): Promise<string> {
+        return await countryFlag.getFlagUrl(props.vacation.destination.split(', ')[1] || props.vacation.destination);
+    }
+
     return (
-        <Card sx={{
+        <Paper elevation={5} sx={{
             maxWidth: 455, m: 8, display: 'flex', flexDirection: 'column', justifyContent: 'space-between',
-            backgroundColor: '#fafafa', border: 0, borderColor: 'primary.main'
+            backgroundColor: '#eaf8fd'
         }}>
             {/* <CardContentArea> */}
             <CardContent>
                 <CardMedia
                     component="img"
                     height="300"
-                    // image={`https://source.unsplash.com/random?${props.vacation.destination.split(',')[0]}`}
                     image={props.vacation.imageUrl}
                     alt="green iguana"
                 />
-                <Typography gutterBottom variant="h5" component="div" sx={{ mt: 6 }}>
-                    {props.vacation.destination}
-                </Typography>
+                <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', paddingInline: '0px', mb: 5, mt: 5 }}>
+                    <Typography gutterBottom variant="h5" fontWeight={500} component="div" sx={{ mt: 6, marginInline: '8px' }}>
+                        {props.vacation.destination}
+                    </Typography>
+                    <img src={flagUrl} width={30} height={30} style={{ margin: 'auto', marginInline: '8px' }} />
+                </Box>
                 <Typography variant="body2" color="text.secondary" sx={{ textAlign: 'left' }}>
                     {props.vacation.description}
                 </Typography>
@@ -74,10 +90,10 @@ function VacationCard(props: VacationCardProps): JSX.Element {
                 <Box width={'100%'}>
                     <Typography gutterBottom variant="h5" component="div" sx={{ mt: 10, ml: 10, textAlign: 'left' }} color={'#3b3b3b'}>
                         <CalendarMonthIcon sx={{ margin: '0 2% 0 0' }} />
-                        {VacationModel.getVacationDateStrings(props.vacation.startDate, props.vacation.endDate)}  
+                        {VacationModel.getVacationDateStrings(props.vacation.startDate, props.vacation.endDate)}
                     </Typography>
-                    <Typography gutterBottom variant="h6" component="div" sx={{ mt: 0, mb:0, ml: 10, textAlign: 'left' }} color={'#3b3b3b'}>
-                        Price: {props.vacation.price}₪
+                    <Typography gutterBottom variant="h6" component="div" sx={{ mt: 0, mb: 0, ml: 10, textAlign: 'left' }} color={'#3b3b3b'}>
+                        Starting At: {formatPrice(props.vacation.price)}$
                     </Typography>
                 </Box>
                 <Box width={'102%'} color={'red'} sx={{
@@ -102,7 +118,7 @@ function VacationCard(props: VacationCardProps): JSX.Element {
                     </Button>
                 </Box>
             </CardActions>
-        </Card>
+        </Paper>
     );
 }
 

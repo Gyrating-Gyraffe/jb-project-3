@@ -1,16 +1,23 @@
 import CssBaseline from "@mui/material/CssBaseline";
 import { ThemeProvider, createTheme } from '@mui/material/styles';
-import Menu from "../Menu/NavBar";
-
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import { AuthState } from "../../../Redux/AuthState";
 import authService from "../../../Services/AuthService";
+import Loading from "../Loading/Loading";
+import NavBar from "../Menu/NavBar";
 import Routing from "../Routing/Routing";
 
 function Layout(): JSX.Element {
 
+    const user = useSelector((state: AuthState) => state.user);
+    const [isLoading, setIsLoading] = useState(true);
+
     // Relog user on first layout render:
     useEffect(() => {
-        authService.relog();
+        authService.relog()
+            .then(() => setIsLoading(false))
+            .catch(() => setIsLoading(false));
     }, []);
 
     const theme = createTheme({
@@ -37,10 +44,11 @@ function Layout(): JSX.Element {
         <div className="Layout">
             <ThemeProvider theme={theme}>
                 <CssBaseline />
-                
-                <Menu />
 
-                <Routing />
+                <NavBar isLoading={isLoading} />
+
+                {/* If loading, show loading screen instead of main routing component */}
+                { isLoading ? <Loading /> : <Routing /> }
             </ThemeProvider>
         </div>
     );

@@ -1,7 +1,5 @@
 import AppRegistrationOutlinedIcon from '@mui/icons-material/AppRegistrationOutlined';
 import { Avatar, Box, Button, Container, Grid, TextField, Typography } from "@mui/material";
-import Copyright from '../../LayoutArea/Copyright/Copyright';
-
 import { DatePicker } from '@mui/x-date-pickers';
 import dayjs, { Dayjs } from "dayjs";
 import { ChangeEvent, useEffect, useState } from 'react';
@@ -9,6 +7,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import VacationModel from '../../../Models/VacationModel';
 import dataService from '../../../Services/DataService';
 import notifyService from '../../../Services/NotifyService';
+import Copyright from '../../LayoutArea/Copyright/Copyright';
 import ImageUpload from '../ImageUpload/ImageUpload';
 
 // This component handles Editing and Adding new vacations, depending on route:
@@ -34,7 +33,7 @@ function EditVacation(): JSX.Element {
         // If we have ID, get vacation:
         if (id) {
             dataService.getVacation(+id)
-                .then(res => setVacation(res))
+                .then(res => setVacation(new VacationModel(res)))
                 .catch(err => notifyService.error(err));
         }
     }, []);
@@ -43,43 +42,37 @@ function EditVacation(): JSX.Element {
         event.preventDefault();
         
         // POST vacation:
-        dataService.addVacation(vacation)
+        if(id) {
+            dataService.updateVacation(vacation)
             .then(res => { 
-                notifyService.success(`Vacation to ${res.destination} added successfully!`); 
+                notifyService.success(`Vacation to ${res.destination} updated successfully!`); 
                 navigate('/home');
             })
             .catch(err => notifyService.error(err));
-    };
-
-    const handleInput = (event: ChangeEvent<HTMLInputElement>) => {
-        const { name, value } = event.target;
-
-        const updatedVacation = new VacationModel(vacation);
-
-        switch (name) {
-            case "destination":
-                updatedVacation.destination = value;
-                break;
-            case "description":
-                updatedVacation.description = value;
-                break;
-            case "price":
-                updatedVacation.price = +value;
-                break;
         }
-
-        setVacation(updatedVacation);
+        else {
+            dataService.addVacation(vacation)
+                .then(res => { 
+                    notifyService.success(`Vacation to ${res.destination} added successfully!`); 
+                    navigate('/home');
+                })
+                .catch(err => notifyService.error(err));
+        }
     };
+
+    const handleInput = (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+        const { name, value } = event.target;
+    
+        setVacation((prevVacation) => ({
+          ...prevVacation,
+          [name]: name === 'price' ? +value : value,
+        }));
+      };
 
     const handleStartDateChange = (newDate: Dayjs) => {
         const updatedVacation = new VacationModel(vacation);
 
         updatedVacation.startDate = newDate.toDate();
-
-        // Preserve the endDate if it exists
-        if (!dayjs(updatedVacation.endDate).isValid()) {
-            updatedVacation.endDate = vacation.endDate;
-        }
 
         setVacation(updatedVacation);
     };
@@ -88,11 +81,6 @@ function EditVacation(): JSX.Element {
         const updatedVacation = new VacationModel(vacation);
 
         updatedVacation.endDate = newDate.toDate();
-
-        // Preserve the endDate if it exists
-        if (!dayjs(updatedVacation.startDate).isValid()) {
-            updatedVacation.startDate = vacation.startDate;
-        }
 
         setVacation(updatedVacation);
     };

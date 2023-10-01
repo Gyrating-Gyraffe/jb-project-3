@@ -79,7 +79,7 @@ async function isAdmin(user: UserModel): Promise<boolean> {
     const result = await dal.execute(sql, [user.userId]);
 
     // Turn resulting array (from DB query) into a boolean value:
-    return !!result;
+    return result.length > 0;
 }
 
 // Adds a refresh token related to a given user:

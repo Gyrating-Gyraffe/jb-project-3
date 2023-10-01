@@ -41,9 +41,9 @@ function Home(): JSX.Element {
             {/* Card Container */}
             <Container sx={{ py: 8 }} maxWidth="xl">
                 <Grid container spacing={4} justifyContent={'center'}>
-                    {vacations && vacations.map((vacation, index) => (
+                    {(vacations && vacations.map((vacation, index) => (
                         <VacationCard vacation={new VacationModel(vacation)} key={index} />
-                    ))}
+                    ))) || "Loading"}
                 </Grid>
             </Container>
             {/* Footer */}

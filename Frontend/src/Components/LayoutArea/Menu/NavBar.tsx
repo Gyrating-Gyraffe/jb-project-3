@@ -16,7 +16,11 @@ const pages: PageLink[] = [
     { name: `Login`, url: `/login` }
 ]
 
-function NavBar() {
+type NavBarProps = {
+    isLoading: boolean
+}
+
+function NavBar(props: NavBarProps) {
     const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
     const user = useSelector((state: AuthState) => state.user);
 
@@ -48,7 +52,7 @@ function NavBar() {
                             }}
                             open={Boolean(anchorElNav)}
                             onClose={handleCloseNavMenu} sx={{ display: { xs: 'block', md: 'none' } }}>
-                            {!user && pages.map((page, index) => (
+                            {!props.isLoading && !user && pages.map((page, index) => (
                                 <MenuItem key={index} onClick={handleCloseNavMenu}>
                                     <Typography textAlign="center" component={NavLink} to={page.url} className='text-link'>
                                         {page.name}
@@ -79,7 +83,7 @@ function NavBar() {
                         HOME
                     </Typography>
                     <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-                        {!user && pages.map((page, index) => (
+                        {!props.isLoading && !user && pages.map((page, index) => (
                             <Button component={NavLink} to={page.url} className='text-link'
                                 key={index}
                                 onClick={handleCloseNavMenu}

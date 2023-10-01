@@ -30,8 +30,8 @@ class VacationModel {
     }
 
     public static getVacationDateStrings(startDate: Date, endDate: Date): string {
-        const startDateFinal = `${startDate.getDate()}.${startDate.getMonth()}.${startDate.getFullYear()}`;
-        const endDateFinal = `${endDate.getDate()}.${endDate.getMonth()}.${endDate.getFullYear()}`;
+        const startDateFinal = `${startDate.getDate()}/${startDate.getMonth()}/${startDate.getFullYear()}`;
+        const endDateFinal = `${endDate.getDate()}/${endDate.getMonth()}/${endDate.getFullYear()}`;
 
         return `${startDateFinal} - ${endDateFinal}`;
     }

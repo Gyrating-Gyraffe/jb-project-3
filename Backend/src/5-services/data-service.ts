@@ -34,7 +34,7 @@ async function getVacation(vacationId: number): Promise<VacationModel> {
 
 async function addVacation(vacation: VacationModel): Promise<VacationModel> {
     vacation.validate();
-
+    
     const imageName = await imageHelper.saveImage(vacation.image);
 
     const sql = `INSERT INTO vacations VALUES(DEFAULT, ?, ?, ?, ?, ?, ?, ?)`;
@@ -56,6 +56,9 @@ async function addVacation(vacation: VacationModel): Promise<VacationModel> {
 }
 
 async function updateVacation(vacation: VacationModel): Promise<void> {
+    if(!vacation.imageUrl)
+        return await updateVacationNoImage(vacation);
+    
     const sql = `UPDATE vacations 
                 SET destination = ?,
                     description = ?,
@@ -66,7 +69,22 @@ async function updateVacation(vacation: VacationModel): Promise<void> {
                 WHERE vacationId = ?`;
 
     const info: OkPacket = await dal.execute(sql, [vacation.destination, vacation.description,
-    vacation.startDate, vacation.endDate, vacation.price, vacation.imageUrl || '', vacation.vacationId]);
+    vacation.startDate, vacation.endDate, vacation.price, vacation.imageUrl, vacation.vacationId]);
+
+    if (info.affectedRows === 0) throw new ResourceNotFoundError(vacation.vacationId);
+}
+
+async function updateVacationNoImage(vacation: VacationModel): Promise<void> {
+    const sql = `UPDATE vacations 
+                SET destination = ?,
+                    description = ?,
+                    startDate = ?,
+                    endDate = ?,
+                    price = ?
+                WHERE vacationId = ?`;
+
+    const info: OkPacket = await dal.execute(sql, [vacation.destination, vacation.description,
+    vacation.startDate, vacation.endDate, vacation.price, vacation.vacationId]);
 
     if (info.affectedRows === 0) throw new ResourceNotFoundError(vacation.vacationId);
 }
