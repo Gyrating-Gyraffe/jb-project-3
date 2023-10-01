@@ -2,6 +2,8 @@ import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
+import { LocalizationProvider } from '@mui/x-date-pickers';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import ReactDOM from 'react-dom/client';
 import { Provider } from 'react-redux';
 import { BrowserRouter } from 'react-router-dom';
@@ -15,9 +17,12 @@ const root = ReactDOM.createRoot(
 );
 root.render(
     <Provider store={authStore}>
-        <BrowserRouter>
-            <Layout />
-        </BrowserRouter>
+        {/* Provide Localization for MUI Date and Time pickers. Info at: https://mui.com/x/react-date-pickers/getting-started/ */}
+        <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <BrowserRouter>
+                <Layout />
+            </BrowserRouter>
+        </LocalizationProvider>
     </Provider>
 );
 

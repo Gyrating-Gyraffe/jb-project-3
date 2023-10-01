@@ -37,13 +37,11 @@ function Layout(): JSX.Element {
         <div className="Layout">
             <ThemeProvider theme={theme}>
                 <CssBaseline />
+                
                 <Menu />
-
-                {/* <Header /> */}
 
                 <Routing />
             </ThemeProvider>
-
         </div>
     );
 }

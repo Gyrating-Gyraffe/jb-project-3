@@ -1,23 +1,25 @@
 class VacationModel {
-    public vacationId: number;
+    public vacationId?: number;
     public destination: string;
     public description: string;
     public startDate: Date;
     public endDate: Date;
     public price: number;
     public imageUrl: string;
+    public followerCount?: number;
 
     public constructor(vacation: VacationModel) {
         this.vacationId = vacation.vacationId;
         this.destination = vacation.destination;
         this.description = vacation.description;
-        this.startDate = this.parseDBDateTime(vacation.startDate.toString());
-        this.endDate = this.parseDBDateTime(vacation.endDate.toString());
+        this.startDate = new Date(vacation.startDate);
+        this.endDate = new Date(vacation.endDate);
         this.price = vacation.price;
         this.imageUrl = vacation.imageUrl;
+        this.followerCount = vacation.followerCount || 0;
     }
 
-    private parseDBDateTime(dateTime: string): Date {
+    private static parseDBDateTime(dateTime: string): Date {
         // Split timestamp into [ Y, M, D, h, m, s ]:
         const db = dateTime.toString().split(/[- T Z :]/);
 
@@ -27,11 +29,11 @@ class VacationModel {
         return date;
     }
 
-    public getVacationDateStrings(): string {
-        const startDate = `${this.startDate.getDate()}.${this.startDate.getMonth()}.${this.startDate.getFullYear()}`;
-        const endDate = `${this.endDate.getDate()}.${this.endDate.getMonth()}.${this.endDate.getFullYear()}`;
+    public static getVacationDateStrings(startDate: Date, endDate: Date): string {
+        const startDateFinal = `${startDate.getDate()}.${startDate.getMonth()}.${startDate.getFullYear()}`;
+        const endDateFinal = `${endDate.getDate()}.${endDate.getMonth()}.${endDate.getFullYear()}`;
 
-        return `${startDate} - ${endDate}`;
+        return `${startDateFinal} - ${endDateFinal}`;
     }
 }
 

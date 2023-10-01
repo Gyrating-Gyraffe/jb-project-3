@@ -4,8 +4,9 @@ import StatusCode from "../3-models/status-code";
 import UserModel from "../3-models/user-model";
 import VacationModel from "../3-models/vacation-model";
 import blockNonAdmin from "../4-middleware/block-non-admin";
-import blockNonLoggedIn from "../4-middleware/block-non-logged-in";
 import dataService from "../5-services/data-service";
+import requireToken from "../4-middleware/require-token";
+import ExpandedRequest from "../3-models/expanded-request";
 
 const router = express.Router();
 
@@ -20,10 +21,26 @@ router.get("/vacations", async (request: Request, response: Response, next: Next
     }
 });
 
+router.get("/vacations/:id", async (request: Request, response: Response, next: NextFunction) => {
+    try {
+        const vacationId = +request.params.id;
+
+        const vacation = await dataService.getVacation(vacationId);
+
+        response.json(vacation);
+    }
+    catch(err: any) {
+        next(err);
+    }
+});
+
 router.post("/vacations", blockNonAdmin, async (request: Request, response: Response, next: NextFunction) => {
     try {
         // Add image from request.files into request.body:
         request.body.image = request.files?.image;
+
+        console.log(request.body);
+        
 
         const vacation = new VacationModel(request.body);
         
@@ -49,7 +66,7 @@ router.patch("/vacations/:id", blockNonAdmin, async (request: Request, response:
 });
 
 // GET http://localhost:4000/api/vacations/:imageName
-router.get("/vacations/:imageName", async (request: Request, response: Response, next: NextFunction) => {
+router.get("/images/vacations/:imageName", async (request: Request, response: Response, next: NextFunction) => {
     try {
 
         // Get image name: 
@@ -60,6 +77,48 @@ router.get("/vacations/:imageName", async (request: Request, response: Response,
 
         // Response back the image file:
         response.sendFile(absolutePath);
+    }
+    catch (err: any) {
+        next(err);
+    }
+});
+
+// POST http://localhost:4000/api/vacations/:id/follow
+router.post("/vacations/:id/follow", requireToken, async (request: ExpandedRequest, response: Response, next: NextFunction) => {
+    try {
+
+        // Get vacation id: 
+        const vacationId = +request.params.id;
+
+        // Get user id:
+        const { user } = request;
+        
+
+        // Call service:
+        const isFollowing = await dataService.followVacation(vacationId, user.userId);
+
+        response.send(isFollowing);
+    }
+    catch (err: any) {
+        next(err);
+    }
+});
+
+// GET http://localhost:4000/api/vacations/:id/follow
+router.get("/vacations/:id/follow", requireToken, async (request: ExpandedRequest, response: Response, next: NextFunction) => {
+    try {
+
+        // Get vacation id: 
+        const vacationId = +request.params.id;
+
+        // Get user id:
+        const { user } = request;
+        
+
+        // Call service:
+        const isFollowing = await dataService.getVacationFollowStatus(vacationId, user.userId);
+
+        response.send(isFollowing);
     }
     catch (err: any) {
         next(err);

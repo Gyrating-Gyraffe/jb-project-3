@@ -56,7 +56,6 @@ async function login(credentials: CredentialsModel): Promise<AuthResult> {
 
 // Deletes refresh token from database, logging the user out:
 async function logout(user: UserModel, clientUUID: string): Promise<boolean> {
-    console.log("UUID: " + clientUUID);
 
     const sql = `DELETE FROM refresh_tokens WHERE userId = ? AND clientUUID = ?;`
 

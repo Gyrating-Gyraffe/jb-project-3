@@ -65,6 +65,7 @@ function verifyTokens(request: ExpandedRequest): Promise<VerificationResult> {
         try {
             const accessToken = request.cookies.access_token;
             const refreshToken = request.cookies.refresh_token;
+            
 
             // If no refresh token in cookies:
             if (!refreshToken) { resolve(null) }
@@ -77,6 +78,7 @@ function verifyTokens(request: ExpandedRequest): Promise<VerificationResult> {
                         if (result.err || !result.token) {
                             throw new UnauthorizedError('You are not logged in');
                         }
+                        resolve(result);
                     })
                     .catch(err => reject(err));
             }

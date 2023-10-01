@@ -13,3 +13,5 @@
 11. Token Logic: Currently when the user logs out the system removes all refresh tokens associated with the user. 
     This means that the user is logged out of all their devices. The issue is that using my system both the token refresh   
     and logout happen simultaneously. This makes it hard to lock onto the UUID pair that is relevant for deletion.
+12. Add dev log file location in backend in AppConfig
+13. Number inputs allow 'e','E','-','+' when force-pasted. How to fix, hmm?

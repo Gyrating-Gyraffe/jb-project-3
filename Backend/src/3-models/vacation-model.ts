@@ -11,6 +11,7 @@ class VacationModel {
     public price: number;
     public imageUrl: string;
     public image: UploadedFile;
+    public followerCount: number;
 
     public constructor(vacation: VacationModel) {
         this.vacationId = vacation.vacationId;
@@ -21,6 +22,7 @@ class VacationModel {
         this.price = vacation.price;
         this.imageUrl = vacation.imageUrl;
         this.image = vacation.image;
+        this.followerCount = vacation.followerCount;
     }
 
     public static validationSchema = Joi.object({
@@ -29,9 +31,10 @@ class VacationModel {
         description: Joi.string().required().min(2).max(1000).trim().regex(/[a-z\d\-_\s]+/i),
         startDate: Joi.date().iso().required(),
         endDate: Joi.date().iso().min(Joi.ref('startDate')).required(),
-        price: Joi.number().required().positive(),
+        price: Joi.number().required().positive().max(10000),
         imageUrl: Joi.string().optional().allow(''),
-        image: Joi.object().optional()
+        image: Joi.object().optional(),
+        followerCount: Joi.number().required().default(0).min(0)
     });
 
     public validate(): void {

@@ -74,18 +74,6 @@ CREATE TABLE `users` (
   `isAdmin` int(1) DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='Users or Admins of the website.';
 
---
--- Dumping data for table `users`
---
-
-INSERT INTO `users` (`userId`, `firstName`, `lastName`, `email`, `password`, `isAdmin`) VALUES
-(1, 'Silvia', 'Imperva', 'impervia@gmail.com', '11ab08fc77516e1c9e61fe8a66a0d87fd9e1bd84dbe680acd89d23297e8cbf00c45df21a901ae1f1674a78dca32627aaf8cc2597c1ca22a942e92e6928c3205d', 0),
-(2, 'John', 'Bryce', 'jb@gmail.com', '2c14b168ed74dea4f7d73a3b9abb03240c8897965b77f2fce96073894d91a6fa0b5f4e044d40fa223c1641a6feb0ac5b99e19aecd89776042c629e64421d742f', 1),
-(11, 'Bart', 'Simpson', 'bart@gmail.com', '7787a15d89608296a0fd212028125fbf8e97f36f589dc643c0e6c8f4fa2b1f4e3fec4a96f38e6bb36bbaf666e71941106bc2f01bd08da9b65c0257e59b7ec13d', 0),
-(12, 'Salty', 'Bacon', 'eitanlander@gmail.com', 'bbe684867c78a6d4c2cb3c03f00438cdec1ff96b0d88c0af496c1f48454d752f7d607833509f5f1adec9cf91ad25a39036a0398026f45cd6127366a7b39f65d7', 0),
-(13, 'Redis', 'Sider', 'redis@gmail.com', 'c36902c1630ca9efcda1353482c02a0975f7113e4ce63963bd766d4ecaefb93f7206cf5fbc39eb948213fb4b10c97480d5a6ad184d0552594a94bc18599d4a1c', 0),
-(14, 'Roy', 'Maman', 'roy@gmail.com', '1a0d88afa943cf7ad9475c53eb23def2a9f8224292f7455db19d9df43f8fbed511acb845e4020898719e836816e08b6f3cfca3b44401ef82249dcee2045fdaa6', 0);
-
 -- --------------------------------------------------------
 
 --
@@ -105,18 +93,6 @@ CREATE TABLE `vacations` (
 --
 -- Dumping data for table `vacations`
 --
-
-INSERT INTO `vacations` (`vacationId`, `destination`, `description`, `startDate`, `endDate`, `price`, `imageName`) VALUES
-(16, 'Santorini, Greece', 'Indulge in an unforgettable Mediterranean getaway on the picturesque island of Santorini. Wander through charming white-washed villages adorned with iconic blue-domed roofs,all while enjoying breathtaking sunsets over the Aegean Sea. With pristine beaches, ancient ruins, and delectable local cuisine, Santorini promises an idyllic escape for romance and relaxation.', '2023-09-15', '2023-09-22', 1500, '6e604b07-1274-4167-a2a2-9d28e0e3c35d.jpg'),
-(17, 'Oslo, Norway', 'Embark on a journey of Scandinavian elegance in Oslo, Norway\'s vibrant capital. Discover a city where modernity seamlessly merges with its rich historical roots. Explore the fascinating Viking Ship Museum, stroll through lush green parks, and be captivated by the beauty of Oslo\'s fjords. Savor the delights of Nordic cuisine and witness a burgeoning arts scene. Oslo invites culture and nature enthusiasts to revel in its unique charm.', '2023-10-10', '2023-10-17', 1200, 'ff3609e0-2af7-4629-90a6-796f0df23619.jpg'),
-(18, 'London, United Kingdom', 'Dive into the heart of London, a city teeming with history, culture, and iconic landmarks. Visit Buckingham Palace, explore the British Museum, and take a ride on the iconic London Eye. Delight in West End theater shows, indulge in world-class shopping, and savor the diverse culinary scene. London promises a dynamic blend of tradition and innovation.', '2023-11-05', '2023-11-12', 1800, 'ed8caf31-b224-4c26-a6a6-6636ddcbb592.jpg'),
-(20, 'Toronto, Canada', 'Experience the energetic vibes of Toronto, Canada\'s largest metropolis. Discover the awe-inspiring CN Tower, explore the eclectic neighborhoods, and take a stroll along the picturesque Lake Ontario waterfront. Immerse yourself in multicultural delights, from global cuisine to vibrant festivals. Toronto offers a perfect mix of urban adventure and natural beauty.', '2023-12-20', '2023-12-27', 1000, '7f4bc2a8-534b-4007-8530-df4fc3203545.jpg'),
-(23, 'Maldives', 'Escape to paradise in the Maldives where crystal-clear waters and overwater bungalows await. Explore vibrant coral reefs, relax on pristine white-sand beaches, and savor exquisite seafood cuisine.', '2023-11-15', '2023-11-22', 3000, 'db27e126-e93f-4269-acc2-13b62f4deca8.jpg'),
-(24, 'Kyoto, Japan', 'Discover the timeless beauty of Kyoto, Japan\'s cultural gem. Visit ancient temples, stroll through serene bamboo groves, and experience the traditional tea ceremony.', '2024-04-10', '2024-04-17', 2500, '3e4ddbd0-68a0-4991-a699-f3170cac420e.jpg'),
-(25, 'Bali, Indonesia', 'Explore the tropical paradise of Bali, known for its lush landscapes, stunning beaches, and vibrant culture. Immerse yourself in Balinese traditions, visit ancient temples, and relax in luxurious resorts. This exotic getaway awaits you.', '2024-05-10', '2024-05-17', 1800, 'eafa3ed2-f73b-4417-a54c-888e57ede8b1.jpg'),
-(26, 'Sydney, Australia', 'Experience the cosmopolitan charm of Sydney, with its iconic landmarks like the Sydney Opera House and the Sydney Harbour Bridge. Enjoy the vibrant city life, explore beautiful beaches, and savor delicious seafood. Sydney offers an unforgettable adventure.', '2024-06-05', '2024-06-12', 2200, '511cb113-9262-44f7-9071-0cf6f6bae2b5.jpg'),
-(27, 'Rio de Janeiro, Brazil', 'Experience the lively spirit of Rio de Janeiro, known for its Carnival, beautiful beaches, and iconic Christ the Redeemer statue. Enjoy samba music, explore lush rainforests, and savor Brazilian cuisine.', '2024-08-15', '2024-08-22', 1900, 'ce04472c-598f-4a46-8fa9-afa9f5eb16d4.jpg');
-
 --
 -- Indexes for dumped tables
 --

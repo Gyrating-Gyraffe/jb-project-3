@@ -6,6 +6,7 @@ class AppConfig {
     public database = process.env.DB_NAME;
     public origin = process.env.ORIGIN;
     public domainName = `http://${this.host}:${this.port}`;
+    public imageUrl = process.env.IMG_URL;
 }
 
 class DevelopmentConfig extends AppConfig {
