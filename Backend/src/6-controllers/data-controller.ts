@@ -51,10 +51,30 @@ router.post("/vacations", [requireToken, blockNonAdmin], async (request: Expande
 
 router.patch("/vacations/:id", [requireToken, blockNonAdmin], async (request: Request, response: Response, next: NextFunction) => {
     try {
+        // Add image from request.files into request.body:
+        request.body.image = request.files?.image;
+
+        // Get vacation Id from request params:
         request.body.vacationId = +request.params.id;
+
+        delete request.body.imageUrl;
+
         const vacation = new VacationModel(request.body);
         await dataService.updateVacation(vacation);
         response.send();
+    }
+    catch (err: any) {
+        next(err);
+    }
+});
+
+router.delete("/vacations/:id", [requireToken, blockNonAdmin], async (request: Request, response: Response, next: NextFunction) => {
+    try {
+        const vacationId = +request.params.id;
+
+        await dataService.deleteVacation(vacationId);
+        
+        response.sendStatus(StatusCode.NoContent);
     }
     catch (err: any) {
         next(err);
@@ -122,7 +142,7 @@ router.get("/vacations/:id/follow", requireToken, async (request: ExpandedReques
 });
 
 // USERS AREA
-router.get("/users", blockNonAdmin, async (request: Request, response: Response, next: NextFunction) => {
+router.get("/users", [requireToken, blockNonAdmin], async (request: Request, response: Response, next: NextFunction) => {
     try {
         const users: UserModel[] = await dataService.getAllUsers();
         
@@ -134,7 +154,7 @@ router.get("/users", blockNonAdmin, async (request: Request, response: Response,
 });
 
 
-router.get("/users/:id", blockNonAdmin, async (request: Request, response: Response, next: NextFunction) => {
+router.get("/users/:id", [requireToken, blockNonAdmin], async (request: Request, response: Response, next: NextFunction) => {
     try {
         const id = +request.params.id;
         const user = await dataService.getOneUser(id);
@@ -145,7 +165,7 @@ router.get("/users/:id", blockNonAdmin, async (request: Request, response: Respo
     }
 });
 
-router.patch("/users/:id", blockNonAdmin, async (request: Request, response: Response, next: NextFunction) => {
+router.patch("/users/:id", [requireToken, blockNonAdmin], async (request: Request, response: Response, next: NextFunction) => {
     try {
         request.body.id = +request.params.id;
         const user = new UserModel(request.body);
@@ -153,6 +173,19 @@ router.patch("/users/:id", blockNonAdmin, async (request: Request, response: Res
         response.send()
     }
     catch (err: any) {
+        next(err);
+    }
+});
+
+router.get("/user/follows", requireToken, async (request: ExpandedRequest, response: Response, next: NextFunction) => {
+    try {
+        const userId = request.user.userId;
+        
+        const vacationIds = await dataService.getUserFollowIDs(userId);
+
+        response.json(vacationIds);
+    }
+    catch(err: any) {
         next(err);
     }
 });

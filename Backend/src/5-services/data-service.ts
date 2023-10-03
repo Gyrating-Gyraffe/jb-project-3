@@ -34,7 +34,7 @@ async function getVacation(vacationId: number): Promise<VacationModel> {
 
 async function addVacation(vacation: VacationModel): Promise<VacationModel> {
     vacation.validate();
-    
+
     const imageName = await imageHelper.saveImage(vacation.image);
 
     const sql = `INSERT INTO vacations VALUES(DEFAULT, ?, ?, ?, ?, ?, ?, ?)`;
@@ -56,9 +56,12 @@ async function addVacation(vacation: VacationModel): Promise<VacationModel> {
 }
 
 async function updateVacation(vacation: VacationModel): Promise<void> {
-    if(!vacation.imageUrl)
+    if (!vacation.image)
         return await updateVacationNoImage(vacation);
-    
+
+    // Save the new image and get the UUID image name as it appears in the Database, and delete the old image:
+    const imageName = await imageHelper.updateImage(vacation.image, vacation.vacationId);
+
     const sql = `UPDATE vacations 
                 SET destination = ?,
                     description = ?,
@@ -68,8 +71,11 @@ async function updateVacation(vacation: VacationModel): Promise<void> {
                     imageName = ?
                 WHERE vacationId = ?`;
 
+    // Get image url for the client (GET request URL):
+    vacation.imageUrl = `${appConfig.origin}/api/vacations/${imageName}`;
+
     const info: OkPacket = await dal.execute(sql, [vacation.destination, vacation.description,
-    vacation.startDate, vacation.endDate, vacation.price, vacation.imageUrl, vacation.vacationId]);
+    vacation.startDate, vacation.endDate, vacation.price, imageName, vacation.vacationId]);
 
     if (info.affectedRows === 0) throw new ResourceNotFoundError(vacation.vacationId);
 }
@@ -89,6 +95,19 @@ async function updateVacationNoImage(vacation: VacationModel): Promise<void> {
     if (info.affectedRows === 0) throw new ResourceNotFoundError(vacation.vacationId);
 }
 
+async function deleteVacation(vacationId: number): Promise<void> {
+
+    // Delete vacation image:
+    await imageHelper.deleteImage(vacationId);
+
+    // Delete vacation:
+    const sql = `DELETE FROM vacations WHERE vacationId = ?`;
+
+    const info: OkPacket = await dal.execute(sql, [vacationId]);
+
+    if (info.affectedRows === 0) throw new ResourceNotFoundError(vacationId);
+}
+
 async function followVacation(vacationId: number, userId: number): Promise<boolean> {
 
     // Check if the user is already following the vacation:
@@ -99,7 +118,7 @@ async function followVacation(vacationId: number, userId: number): Promise<boole
         await dal.execute('DELETE FROM followers WHERE userId = ? AND vacationId = ?', [userId, vacationId]);
 
     }
-    else {   
+    else {
         // If the user is not following, follow by inserting a new record:
         await dal.execute('INSERT INTO followers(userId, vacationId) VALUES (?, ?)', [userId, vacationId]);
     }
@@ -159,14 +178,30 @@ async function updateUser(user: UserModel): Promise<void> {
     if (info.affectedRows === 0) throw new ResourceNotFoundError(user.userId);
 }
 
+async function getUserFollowIDs(userId: number): Promise<number[]> {
+    const sql = `SELECT vacationId FROM followers WHERE userId = ?`;
+
+    // Collection of vacationId objects:
+    const vacationIds: { vacationId: number }[] = await dal.execute(sql, [userId]);
+
+    if (vacationIds.length === 0) throw new ListNotFoundError();
+
+    // Map to a number array:
+    const numericalArray: number[] = vacationIds.map((item: { vacationId: number }) => item.vacationId);
+
+    return numericalArray;
+}
+
 export default {
     getAllUsers,
     getOneUser,
     updateUser,
+    getUserFollowIDs,
     getAllVacations,
     getVacation,
     addVacation,
     updateVacation,
+    deleteVacation,
     followVacation,
     getVacationFollowStatus
 };

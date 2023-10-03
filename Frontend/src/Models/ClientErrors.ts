@@ -1,3 +1,5 @@
+import { ValidationErrorItem } from "joi";
+
 export enum StatusCode {
     OK = 200,
     Created = 201,
@@ -7,6 +9,10 @@ export enum StatusCode {
     Forbidden = 403,
     NotFound = 404,
     InternalServerError = 500
+}
+
+export class FormValidationError {
+    public constructor(public message: string, public errorItem: ValidationErrorItem[]) { }
 }
 
 export class ClientError {

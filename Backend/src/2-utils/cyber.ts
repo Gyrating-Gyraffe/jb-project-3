@@ -78,7 +78,6 @@ function verifyTokens(request: ExpandedRequest): Promise<VerificationResult> {
                         if (result.err || !result.token) {
                             throw new UnauthorizedError('You are not logged in');
                         }
-                        resolve(result);
                     })
                     .catch(err => reject(err));
             }

@@ -17,8 +17,8 @@ class VacationModel {
         this.vacationId = vacation.vacationId;
         this.destination = vacation.destination;
         this.description = vacation.description;
-        this.startDate = vacation.startDate;
-        this.endDate = vacation.endDate;
+        this.startDate = new Date(vacation.startDate);
+        this.endDate = new Date(vacation.endDate);
         this.price = vacation.price;
         this.imageUrl = vacation.imageUrl;
         this.image = vacation.image;

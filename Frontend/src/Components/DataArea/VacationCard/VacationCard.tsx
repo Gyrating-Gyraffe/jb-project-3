@@ -1,61 +1,32 @@
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
-import PlaceIcon from '@mui/icons-material/Place';
-import PhotoLibraryIcon from '@mui/icons-material/PhotoLibrary';
 import InfoIcon from '@mui/icons-material/Info';
-import { Box, Button, Card, CardActions, CardContent, CardMedia, Typography } from '@mui/material';
+import PhotoLibraryIcon from '@mui/icons-material/PhotoLibrary';
+import PlaceIcon from '@mui/icons-material/Place';
+import { Box, Button, CardActions, CardContent, CardMedia, Typography } from '@mui/material';
+import Paper from '@mui/material/Paper';
 import { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
 import { NavLink } from 'react-router-dom';
 import VacationModel from '../../../Models/VacationModel';
-import { AuthState } from '../../../Redux/AuthState';
-import dataService from '../../../Services/DataService';
-import notifyService from '../../../Services/NotifyService';
 import appConfig from '../../../Utils/AppConfig';
 import countryFlag from '../../../Utils/CountryFlag';
-import Paper from '@mui/material/Paper';
+import VacationOverSticker from '../../LayoutArea/VacationOverSticker/VacationOverSticker';
 
 type VacationCardProps = {
     vacation: VacationModel;
+    followState: boolean;
+    onFollow: Function
 }
 
 function VacationCard(props: VacationCardProps): JSX.Element {
 
-    const [followState, setFollowState] = useState<boolean>(false);
-    const [userChangedFollow, setUserChangedFollow] = useState<boolean>(false);
-
     const [flagUrl, setFlagUrl] = useState<string>('');
-
-    const user = useSelector((state: AuthState) => state.user);
-
-    // If user changed follow status, we increment the props.vacation.followerCount value with this:
-    const followStatusIncrement = userChangedFollow ? (followState ? 1 : -1) : 0;
 
     useEffect(() => { getFlag().then(res => setFlagUrl(res)).catch(err => console.log(err)) }, [])
 
-    // On init and User change (Redux Auth State):
-    useEffect(() => {
-
-        // If user is not logged in, return:
-        if (!user) return;
-
-        // Get follow status of user for this vacation:
-        dataService.getVacationFollowStatus(props.vacation.vacationId)
-            .then(res => { setFollowState(res); setUserChangedFollow(false); })
-            .catch(err => notifyService.error(err.message));
-
-    }, [user]);
-
-    // Follow/Unfollow this vacation when button is pressed:
-    function handleFollow() {
-        dataService.followVacation(props.vacation.vacationId)
-            .then(res => { setFollowState(res); setUserChangedFollow(!userChangedFollow); })
-            .catch(err => notifyService.error(err.message));
-    }
-
     function formatPrice(price: number): string {
-        if (price >= 1000) return (price.toLocaleString());
+        return price.toLocaleString();
     }
 
     async function getFlag(): Promise<string> {
@@ -64,16 +35,17 @@ function VacationCard(props: VacationCardProps): JSX.Element {
 
     return (
         <Paper elevation={5} sx={{
-            maxWidth: 455, m: 8, display: 'flex', flexDirection: 'column', justifyContent: 'space-between',
+            width: 380, m: 8, display: 'flex', flexDirection: 'column', justifyContent: 'space-between',
             backgroundColor: '#eaf8fd'
         }}>
             {/* <CardContentArea> */}
-            <CardContent>
+            <CardContent sx={{ overflow: 'hidden', position: 'relative' }}>
+                <VacationOverSticker endDate={props.vacation.endDate} key={props.vacation.vacationId} />
                 <CardMedia
                     component="img"
                     height="300"
                     image={props.vacation.imageUrl}
-                    alt="green iguana"
+                    alt="vacation photo"
                 />
                 <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', paddingInline: '0px', mb: 5, mt: 5 }}>
                     <Typography gutterBottom variant="h5" fontWeight={500} component="div" sx={{ mt: 6, marginInline: '8px' }}>
@@ -100,20 +72,25 @@ function VacationCard(props: VacationCardProps): JSX.Element {
                     margin: 0, padding: 5, translate: '-4px', display: 'flex',
                     flexDirection: 'row', justifyContent: 'flex-end'
                 }}>
-                    <Button size="medium" color={'inherit'} variant='contained' onClick={handleFollow} sx={{ margin: 2, flex: 3 }}>
-                        {followState ? 'Unfollow' : 'Follow'} &nbsp;
-                        {followState ? <FavoriteIcon /> : <FavoriteBorderIcon />} &nbsp; {props.vacation.followerCount + followStatusIncrement}
+                    <Button size="medium" color={'inherit'} variant='contained' onClick={() => props.onFollow(props.vacation)} sx={{ marginInline: 2, flex: 3 }}>
+                        <Typography sx={{ textTransform: 'capitalize', fontWeight: '500' }}>
+                            {props.followState ? 'Unfollow' : 'Follow'}
+                        </Typography> &nbsp;
+                        {props.followState ? <FavoriteIcon /> : <FavoriteBorderIcon />} &nbsp;
+                        <Typography sx={{ fontWeight: '500' }}>
+                            {props.vacation.followerCount}
+                        </Typography>
                     </Button>
                     <Button size="medium" color={'primary'} variant='contained' component={NavLink}
-                        to={appConfig.externalApi.wikipediaUrl + props.vacation.destination} target='_blank' sx={{ margin: 4 }}>
-                        <InfoIcon />
+                        to={appConfig.externalApi.wikipediaUrl + props.vacation.destination} target='_blank' sx={{ marginInline: 3 }}>
+                        <InfoIcon sx={{ maxWidth: '30px' }} />
                     </Button>
                     <Button size="medium" color={'primary'} variant='contained' component={NavLink}
-                        to={appConfig.externalApi.googleMapsUrl + props.vacation.destination} target='_blank' sx={{ margin: 4 }}>
+                        to={`/vacations/album/${props.vacation.vacationId}`} sx={{ marginInline: 3 }}>
                         <PhotoLibraryIcon />
                     </Button>
                     <Button size="medium" color={'primary'} variant='contained' component={NavLink}
-                        to={appConfig.externalApi.googleMapsUrl + props.vacation.destination} target='_blank' sx={{ margin: 4 }}>
+                        to={appConfig.externalApi.googleMapsUrl + props.vacation.destination} target='_blank' sx={{ marginInline: 3 }}>
                         <PlaceIcon />
                     </Button>
                 </Box>

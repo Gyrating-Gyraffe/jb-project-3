@@ -1,16 +1,13 @@
 import CssBaseline from "@mui/material/CssBaseline";
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
-import { AuthState } from "../../../Redux/AuthState";
 import authService from "../../../Services/AuthService";
 import Loading from "../Loading/Loading";
 import NavBar from "../Menu/NavBar";
 import Routing from "../Routing/Routing";
 
 function Layout(): JSX.Element {
-
-    const user = useSelector((state: AuthState) => state.user);
+    
     const [isLoading, setIsLoading] = useState(true);
 
     // Relog user on first layout render:
@@ -19,7 +16,7 @@ function Layout(): JSX.Element {
             .then(() => setIsLoading(false))
             .catch(() => setIsLoading(false));
     }, []);
-
+//24cbd5
     const theme = createTheme({
         palette: {
             primary: {
@@ -27,7 +24,7 @@ function Layout(): JSX.Element {
                 "100": `#f59e98`
             },
             secondary: {
-                main: `#24cbd5`,
+                main: `#0288D1`,
                 "100": `#94ebf5`
             },
             action: {

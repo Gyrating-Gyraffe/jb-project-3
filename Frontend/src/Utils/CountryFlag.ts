@@ -7,10 +7,9 @@ class CountryFlag {
             const res = await axios.get(`https://restcountries.com/v2/name/${countryName} `);
             if (res.data.length > 0) {
                 const countryCode = res.data[0].alpha2Code;
-                console.log(`Country Code for ${countryName}: ${countryCode} `);
+
                 return `https://www.countryflagicons.com/SHINY/64/${countryCode}.png`;
-
-
+                
             } else {
                 console.log(`Country "${countryName}" not found.`);
                 return '';

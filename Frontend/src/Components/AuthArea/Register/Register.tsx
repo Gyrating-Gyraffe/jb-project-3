@@ -1,15 +1,23 @@
 import AppRegistrationOutlinedIcon from '@mui/icons-material/AppRegistrationOutlined';
 import { Avatar, Box, Button, Checkbox, Container, FormControlLabel, Grid, Link, TextField, Typography } from '@mui/material';
-import * as React from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import UserModel from '../../../Models/UserModel';
 import authService from '../../../Services/AuthService';
 import Copyright from '../../LayoutArea/Copyright/Copyright';
+import { FormEvent, useState } from 'react';
+import formValidator, { ValidationState } from '../../../Utils/FormValidator';
+import notifyService from '../../../Services/NotifyService';
 
 function Register(): JSX.Element {
+
+    const [validationState, setValidationState] = useState<ValidationState>({
+        firstName: true, lastName: true,
+        email: true, password: true
+    });
+
     const navigate = useNavigate();
 
-    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         const data = new FormData(event.currentTarget);
         const user = new UserModel({
@@ -18,10 +26,32 @@ function Register(): JSX.Element {
             email: data.get('email').toString(),
             password: data.get('password').toString(),
         });
+
+        if(!validate(user)) return;
+
         authService.register(user)
             .then(res => res ? navigate('/home') : navigate('/register'))
             .catch();
     };
+
+    const validate = (user: UserModel): boolean => {
+        try {
+            UserModel.validate(user);
+        }
+        catch (err: any) {
+
+            // Pass error to FormValidator to receive a new ValidationState:
+            const newValidationState = formValidator.handleError(err, validationState);
+            setValidationState(newValidationState);
+
+            // Then notify the user of the issue:
+            notifyService.error(err.message);
+
+            return false;
+        }
+
+        return true;
+    }
 
     return (
         <Container component="main" maxWidth="xs">
@@ -36,17 +66,23 @@ function Register(): JSX.Element {
                     <Grid container spacing={2}>
                         <Grid item xs={12} sm={6}>
                             <TextField autoComplete="given-name" name="firstName" required fullWidth
-                                id="firstName" label="First Name" autoFocus />
+                                id="firstName" label="First Name" autoFocus error={!validationState["firstName"]}
+                                helperText={!validationState["firstName"] ? "Invalid First Name" : ""} />
                         </Grid>
                         <Grid item xs={12} sm={6}>
-                            <TextField required fullWidth id="lastName" label="Last Name" name="lastName" autoComplete="family-name" />
+                            <TextField required fullWidth id="lastName" label="Last Name" name="lastName" autoComplete="family-name"
+                                error={!validationState["lastName"]}
+                                helperText={!validationState["lastName"] ? "Invalid Last Name" : ""} />
                         </Grid>
                         <Grid item xs={12}>
-                            <TextField required fullWidth id="email" label="Email Address" name="email" autoComplete="email" />
+                            <TextField required fullWidth id="email" label="Email Address" name="email" autoComplete="email"
+                                error={!validationState["email"]}
+                                helperText={!validationState["email"] ? "Invalid Email" : ""} />
                         </Grid>
                         <Grid item xs={12}>
                             <TextField required fullWidth name="password" label="Password" type="password" id="password"
-                                autoComplete="new-password" />
+                                autoComplete="new-password" error={!validationState["password"]} 
+                                helperText={!validationState["password"] ? "Invalid Password" : ""} />
                         </Grid>
                         <Grid item xs={12}>
                             <FormControlLabel control={<Checkbox value="allowExtraEmails" color="primary" />}

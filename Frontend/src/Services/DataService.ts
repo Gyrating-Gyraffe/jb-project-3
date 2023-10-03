@@ -1,13 +1,20 @@
 import axios from "axios";
+import { ForbiddenError, StatusCode, UnauthorizedError } from "../Models/ClientErrors";
 import VacationModel from "../Models/VacationModel";
 import appConfig from "../Utils/AppConfig";
-import { ForbiddenError, StatusCode, UnauthorizedError } from "../Models/ClientErrors";
 
 class DataService {
     public async getAllVacations(): Promise<VacationModel[]> {
         try {
             const response = await axios.get<VacationModel[]>(appConfig.serverUrl + "vacations", { withCredentials: true });
-            return response.data;
+
+            // Vacations as they are in the database:
+            const dbVacations = response.data;
+
+            // Remap database vacations to client-specific vacation models:
+            const clientVacations = dbVacations.map(vacation => new VacationModel(vacation));
+
+            return clientVacations;
         }
         catch (err: any) {
             this.catchErr(err);
@@ -48,7 +55,7 @@ class DataService {
         }
     }
 
-    public async updateVacation(vacation: VacationModel): Promise<VacationModel> {
+    public async updateVacation(vacation: VacationModel): Promise<void> {
         try {
             const formData = this.createFormData(vacation);
 
@@ -56,7 +63,7 @@ class DataService {
             if (vacation.imageUrl) {
                 const imageBlob = await fetch(vacation.imageUrl).then((response) => response.blob());
                 formData.append("image", imageBlob, "image.jpg");
-            }
+            }       
 
             const response = await axios.patch<VacationModel>(appConfig.serverUrl + `vacations/${vacation.vacationId}`, formData, {
                 headers: {
@@ -64,10 +71,19 @@ class DataService {
                 },
                 withCredentials: true
             });
-
-            return response.data;
         }
         catch (err: any) {
+            this.catchErr(err);
+        }
+    }
+
+    public async deleteVacation(vacationId: number): Promise<boolean> {
+        try {
+            const response = await axios.delete<boolean>(appConfig.serverUrl + `vacations/${vacationId}`, { withCredentials: true });
+
+            return response.status === StatusCode.NoContent;
+        }
+        catch(err: any) {
             this.catchErr(err);
         }
     }
@@ -82,9 +98,10 @@ class DataService {
         }
     }
 
-    public async getVacationFollowStatus(vacationId: number): Promise<boolean> {
+    // Get IDs of vacations the user follows:
+    public async getUserFollowIDs(): Promise<number[]> {
         try {
-            const response = await axios.get<boolean>(appConfig.serverUrl + `vacations/${vacationId}/follow`, { withCredentials: true });
+            const response = await axios.get<number[]>(appConfig.serverUrl + `user/follows`, { withCredentials: true });
             return response.data;
         }
         catch (err: any) {
@@ -117,7 +134,8 @@ class DataService {
         formData.append("startDate", vacation.startDate.toISOString());
         formData.append("endDate", vacation.endDate.toISOString());
         formData.append("price", vacation.price.toString());
-        formData.append("followerCount", vacation.followerCount.toString());
+        formData.append("followerCount", vacation.followerCount.toString())
+        formData.append("imageUrl", vacation.imageUrl);
 
         return formData;
     }

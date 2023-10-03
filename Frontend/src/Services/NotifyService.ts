@@ -4,7 +4,8 @@ class NotifyService {
 
     private notyf = new Notyf({
         duration: 3000,
-        position: { x: "center", y: "top" }
+        position: { x: "center", y: "top" },
+        ripple: false
     });
 
     public success(message: string): void {
@@ -14,8 +15,6 @@ class NotifyService {
     public error(err: any): void {
         const message = this.extractErrorMessage(err);
         this.notyf.error(message);
-        console.log(err);
-        
     }
 
     private extractErrorMessage(err: any): string {

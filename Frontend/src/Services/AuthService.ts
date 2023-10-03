@@ -3,8 +3,8 @@ import CredentialsModel from "../Models/CredentialsModel";
 import appConfig from "../Utils/AppConfig";
 import notifyService from "./NotifyService";
 import UserModel from "../Models/UserModel";
-import authStore, { AuthActionType } from "../Redux/AuthState";
 import sessionHandler from "../Utils/SessionHandler";
+import globalStore, { GlobalActionType } from "../Redux/GlobalState";
 
 
 class AuthService {
@@ -27,7 +27,7 @@ class AuthService {
             const returnedUser: UserModel = response.data;
 
             // Update Redux state:
-            authStore.dispatch({ type: AuthActionType.SetState, payload: returnedUser });
+            globalStore.dispatch({ type: GlobalActionType.SetUser, payload: returnedUser });
 
             notifyService.success("Registered successfully");
             return returnedUser || false;
@@ -41,9 +41,9 @@ class AuthService {
             const response = await axios.post(appConfig.serverUrl + "auth/relog", "", { withCredentials: true });
 
             const returnedUser: UserModel = response.data;
-
+            
             // Update Redux state:
-            authStore.dispatch({ type: AuthActionType.SetState, payload: returnedUser });
+            globalStore.dispatch({ type: GlobalActionType.SetUser, payload: returnedUser });
 
             if(!sessionHandler.isFirstSessionLoad()) {
                 notifyService.success(`Welcome back, ${returnedUser.firstName}`);
@@ -69,7 +69,7 @@ class AuthService {
             if(response.status !== 204) return false;
 
             // Update Redux state:
-            authStore.dispatch({ type: AuthActionType.SetState, payload: null });
+            globalStore.dispatch({ type: GlobalActionType.SetUser, payload: null });
 
             notifyService.success(`Logged out successfully`);
             return true;

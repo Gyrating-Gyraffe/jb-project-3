@@ -1,11 +1,11 @@
-import AdbIcon from '@mui/icons-material/Adb';
+import HomeIcon from '@mui/icons-material/Home';
 import MenuIcon from '@mui/icons-material/Menu';
 import { AppBar, Box, Button, Container, IconButton, Menu, MenuItem, Toolbar, Typography } from '@mui/material';
 import * as React from 'react';
 import { useSelector } from 'react-redux';
 import { NavLink } from 'react-router-dom';
-import { AuthState } from '../../../Redux/AuthState';
 import UserMenu from './UserMenu';
+import { GlobalState } from '../../../Redux/GlobalState';
 
 type PageLink = {
     name: string,
@@ -22,7 +22,7 @@ type NavBarProps = {
 
 function NavBar(props: NavBarProps) {
     const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
-    const user = useSelector((state: AuthState) => state.user);
+    const user = useSelector((state: GlobalState) => state.user);
 
     const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorElNav(event.currentTarget);
@@ -62,24 +62,26 @@ function NavBar(props: NavBarProps) {
                         </Menu>
                     </Box>
 
-                    <AdbIcon sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} />
+                    
                     <Typography className='text-link' variant="h5" noWrap component={NavLink} to={"/home"}
                         sx={{
                             mr: 2, display: { xs: 'flex', md: 'none' }, flexGrow: 1, fontFamily: 'monospace',
                             fontWeight: 700, letterSpacing: '.3rem', color: 'inherit', textDecoration: 'none'
                         }}
                     >
+                        <HomeIcon sx={{ display: { xs: 'flex', md: 'none' }, mb: 'auto', mt: 'auto', mr: 3 }} />
                         HOME
                     </Typography>
 
                     {/* DESKTOP LAYOUT */}
-                    <AdbIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
+                    
                     <Typography variant="h6" noWrap component={NavLink} to={"/home"}
                         sx={{
                             mr: 2, display: { xs: 'none', md: 'flex' }, fontFamily: 'monospace', fontWeight: 700,
                             letterSpacing: '.3rem', color: 'inherit', textDecoration: 'none'
                         }}
                     >
+                        <HomeIcon sx={{ display: { xs: 'none', md: 'flex' }, mb: 'auto', mt: 'auto', mr: 3 }} />
                         HOME
                     </Typography>
                     <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>

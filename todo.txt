@@ -15,3 +15,8 @@
     and logout happen simultaneously. This makes it hard to lock onto the UUID pair that is relevant for deletion.
 12. Add dev log file location in backend in AppConfig
 13. Number inputs allow 'e','E','-','+' when force-pasted. How to fix, hmm?
+
+
+C. Get rid of the annoying 0 in Add/Edit vacations.
+D. Add main menu/home page. Guests can sign up or sign in. Users can view vacations, filter vacations or sign out. Admins can add/edit/delete vacations, view report, download CSV or sign out.
+    Must show user/admin full name.

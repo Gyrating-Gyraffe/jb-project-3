@@ -8,15 +8,17 @@ import ReactDOM from 'react-dom/client';
 import { Provider } from 'react-redux';
 import { BrowserRouter } from 'react-router-dom';
 import Layout from './Components/LayoutArea/Layout/Layout';
-import authStore from './Redux/AuthState';
 import './index.css';
 import reportWebVitals from './reportWebVitals';
+import globalStore from './Redux/GlobalState';
+
+
 
 const root = ReactDOM.createRoot(
     document.getElementById('root') as HTMLElement
 );
 root.render(
-    <Provider store={authStore}>
+    <Provider store={globalStore}>
         {/* Provide Localization for MUI Date and Time pickers. Info at: https://mui.com/x/react-date-pickers/getting-started/ */}
         <LocalizationProvider dateAdapter={AdapterDayjs}>
             <BrowserRouter>

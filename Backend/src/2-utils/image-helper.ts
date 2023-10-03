@@ -2,12 +2,11 @@ import { UploadedFile } from "express-fileupload";
 import path from "path";
 import { v4 as uuid } from "uuid";
 import fsPromises from "fs/promises";
+import dal from "./dal";
 
 // Save image to disk in a uuid name:
 async function saveImage(image: UploadedFile): Promise<string> {
 
-    console.log(image);
-    
     // If no image sent:
     if (!image) return "no-image.jpg";
 
@@ -28,10 +27,10 @@ async function saveImage(image: UploadedFile): Promise<string> {
 }
 
 // Update image: 
-async function updateImage(image: UploadedFile, oldImage: string): Promise<string> {
+async function updateImage(image: UploadedFile, vacationId: number): Promise<string> {
 
     // Remove old image:
-    await deleteImage(oldImage);
+    await deleteImage(vacationId);
 
     // Save new image:
     const fileName = await saveImage(image);
@@ -41,12 +40,22 @@ async function updateImage(image: UploadedFile, oldImage: string): Promise<strin
 }
 
 // Delete image: 
-async function deleteImage(oldImage: string): Promise<void> {
+async function deleteImage(vacationId: number): Promise<void> {
     try {
-        if (!oldImage) return;
+        if (!vacationId) return;
+
+        // Get the old image name:
+        const data = await dal.execute('SELECT imageName AS oldImageName FROM vacations WHERE vacationId = ?',
+            [vacationId]);
+
+        // Extract old image name from returned array:
+        let { oldImageName } = data[0];
+
+        // If the old image was the standard no-image placeholder, give empty string to avoid deleting it:
+        if (oldImageName === "no-image.jpg") oldImageName = "";
 
         // Get absolute path to save image:
-        const absolutePath = path.join(__dirname, "..", "1-assets", "images", oldImage);
+        const absolutePath = path.join(__dirname, "..", "1-assets", "images", oldImageName);
 
         // Remove image:
         await fsPromises.rm(absolutePath);

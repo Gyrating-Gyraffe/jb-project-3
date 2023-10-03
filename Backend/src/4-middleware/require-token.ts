@@ -19,7 +19,7 @@ async function requireToken(request: ExpandedRequest, response: Response, next: 
     }
     catch (err: any) {
         // Access Token is expired:
-        if (err instanceof TokenExpiredError) {
+        if (err instanceof TokenExpiredError || err instanceof UnauthorizedError) {
 
             // Handle expired token, if succeeds - save new access token:
             const tokenPair = await handleExpiredToken(request);
@@ -47,7 +47,7 @@ async function handleExpiredToken(request: ExpandedRequest): Promise<TokenPair |
         // Get the encoded user object and client-specific UUID from expanded request:
         const { user, clientUUID } = request;
 
-        // Get the refresh token that matches this access token:
+        // Get the refresh token from DB that matches this user info:
         const refreshToken = await authService.getRefreshToken(user, clientUUID);
         
         // Verify the refresh token:
