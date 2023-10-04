@@ -2,7 +2,7 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import { Avatar, Box, Button, CssBaseline, Grid, Link, Paper, TextField, Typography } from "@mui/material";
 import { FormEvent, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { NavLink, useNavigate } from 'react-router-dom';
+import { NavLink, Navigate, useNavigate } from 'react-router-dom';
 import CredentialsModel from '../../../Models/CredentialsModel';
 import UserModel from '../../../Models/UserModel';
 import { GlobalActionType } from '../../../Redux/GlobalState';
@@ -11,13 +11,21 @@ import notifyService from '../../../Services/NotifyService';
 import formValidator, { ValidationState } from '../../../Utils/FormValidator';
 import Copyright from '../../LayoutArea/Copyright/Copyright';
 
-function Login(): JSX.Element {
+type LoginProps = {
+    user: UserModel;
+}
+
+function Login(props: LoginProps): JSX.Element {
 
     const [validationState, setValidationState] = useState<ValidationState>({ email: true, password: true });
 
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
+    // If already logged in, navigate to Home page:
+    if(props.user) return <Navigate to={"/home"} />;
+
+    // Handle form submission:
     const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         const data = new FormData(event.currentTarget);
@@ -36,6 +44,7 @@ function Login(): JSX.Element {
             .catch();
     };
 
+    // Validate all form input:
     const validate = (credentials: CredentialsModel): boolean => {
         try {
             CredentialsModel.validate(credentials);

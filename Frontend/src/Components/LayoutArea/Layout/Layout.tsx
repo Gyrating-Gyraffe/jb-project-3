@@ -38,7 +38,7 @@ function Layout(): JSX.Element {
     });
 
     return (
-        <div className="Layout">
+        <>
             <ThemeProvider theme={theme}>
                 <CssBaseline />
 
@@ -47,7 +47,7 @@ function Layout(): JSX.Element {
                 {/* If loading, show loading screen instead of main routing component */}
                 { isLoading ? <Loading /> : <Routing /> }
             </ThemeProvider>
-        </div>
+        </>
     );
 }
 

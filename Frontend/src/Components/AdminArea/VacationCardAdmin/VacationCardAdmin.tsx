@@ -46,7 +46,7 @@ function VacationCardAdmin(props: VacationCardAdminProps): JSX.Element {
                 flexDirection: 'row', justifyContent: 'space-between'
             }}>
                 <Button size="medium" color={'primary'} variant='contained' component={NavLink}
-                    to={`/vacations/edit/${props.vacation.vacationId}`} sx={{ marginInline: 3 }}>
+                    to={`/admin/vacations/edit/${props.vacation.vacationId}`} sx={{ marginInline: 3 }}>
                     <EditTwoToneIcon sx={{ maxWidth: '30px' }} />
                     &nbsp;Edit
                 </Button>

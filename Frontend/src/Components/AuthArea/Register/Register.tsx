@@ -1,6 +1,6 @@
 import AppRegistrationOutlinedIcon from '@mui/icons-material/AppRegistrationOutlined';
 import { Avatar, Box, Button, Checkbox, Container, FormControlLabel, Grid, Link, TextField, Typography } from '@mui/material';
-import { NavLink, useNavigate } from 'react-router-dom';
+import { NavLink, Navigate, useNavigate } from 'react-router-dom';
 import UserModel from '../../../Models/UserModel';
 import authService from '../../../Services/AuthService';
 import Copyright from '../../LayoutArea/Copyright/Copyright';
@@ -8,7 +8,11 @@ import { FormEvent, useState } from 'react';
 import formValidator, { ValidationState } from '../../../Utils/FormValidator';
 import notifyService from '../../../Services/NotifyService';
 
-function Register(): JSX.Element {
+type RegisterProps = {
+    user: UserModel;
+}
+
+function Register(props: RegisterProps): JSX.Element {
 
     const [validationState, setValidationState] = useState<ValidationState>({
         firstName: true, lastName: true,
@@ -17,6 +21,10 @@ function Register(): JSX.Element {
 
     const navigate = useNavigate();
 
+    // If already logged in, navigate to Home page:
+    if (props.user) return <Navigate to={"/home"} />;
+
+    // Handle form submission:
     const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         const data = new FormData(event.currentTarget);
@@ -27,13 +35,14 @@ function Register(): JSX.Element {
             password: data.get('password').toString(),
         });
 
-        if(!validate(user)) return;
+        if (!validate(user)) return;
 
         authService.register(user)
             .then(res => res ? navigate('/home') : navigate('/register'))
             .catch();
     };
 
+    // Validate all form input:
     const validate = (user: UserModel): boolean => {
         try {
             UserModel.validate(user);
@@ -81,7 +90,7 @@ function Register(): JSX.Element {
                         </Grid>
                         <Grid item xs={12}>
                             <TextField required fullWidth name="password" label="Password" type="password" id="password"
-                                autoComplete="new-password" error={!validationState["password"]} 
+                                autoComplete="new-password" error={!validationState["password"]}
                                 helperText={!validationState["password"] ? "Invalid Password" : ""} />
                         </Grid>
                         <Grid item xs={12}>

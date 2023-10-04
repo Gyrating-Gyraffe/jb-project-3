@@ -9,6 +9,7 @@ import catchAll from "./4-middleware/catch-all";
 import appConfig from "./2-utils/app-config";
 import expressFileUpload from "express-fileupload";
 import cookieParser from "cookie-parser";
+import expressRateLimit from "./4-middleware/rate-limit";
 
 const server = express();
 
@@ -22,6 +23,7 @@ server.use(cors(corsOptions));
 server.use(cookieParser());
 server.use(express.json());
 server.use(expressFileUpload());
+server.use("/api/auth", expressRateLimit);
 server.use("/api", [dataController, authController]);
 server.use("*", routeNotFound);
 server.use(catchAll);

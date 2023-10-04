@@ -44,13 +44,12 @@ function VacationListAdmin(): JSX.Element {
             <Hero />
 
             <Typography variant="h3">Admin Access</Typography>
-
-            
+  
             <Box sx={{ bgcolor: 'background.paper', pt: 8, pb: 6, mt: 8 }}>
                 <Container maxWidth="sm">
                     <Stack sx={{ pt: 4 }} direction="row" spacing={2} justifyContent="center">
-                        <Button variant="contained" component={NavLink} to={"/vacations/new"} >Add Vacation</Button>
-                        <Button variant="outlined" component={NavLink} to={"/admin"}>View Dashboard</Button>
+                        <Button variant="contained" component={NavLink} to={"/admin/vacations/new"} >Add Vacation</Button>
+                        <Button variant="outlined" component={NavLink} to={"/admin/dashboard"}>View Dashboard</Button>
                     </Stack>
                 </Container>
             </Box>

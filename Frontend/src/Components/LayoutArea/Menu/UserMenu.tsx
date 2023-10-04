@@ -31,7 +31,7 @@ function UserMenu(props: UserMenuProps): JSX.Element {
                 <Box sx={{ flexGrow: 0 }}>
                     <Tooltip title="User settings">
                         <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                            <Avatar alt={`${props.user.firstName} ${props.user.lastName}`} src="/static/images/avatar/2.jpg" />
+                            <Avatar alt={`${props.user.firstName} ${props.user.lastName}`} src="/static/images/avatar/2.jpg" sx={{bgcolor: 'primary.100'}}/>
                         </IconButton>
                     </Tooltip>
                     <Menu sx={{ mt: '45px' }} id="menu-appbar" anchorEl={anchorElUser}

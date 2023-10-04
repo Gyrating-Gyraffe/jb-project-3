@@ -1,6 +1,9 @@
+import { Box, Typography } from "@mui/material";
 import UserModel from "../../../Models/UserModel";
-import VacationListAdmin from "../../AdminArea/VacationListAdmin/VacationListAdmin";
-import VacationList from "../../DataArea/VacationList/VacationList";
+import Hero from "../../LayoutArea/Hero/Hero";
+import GuestHome from "../GuestHome/GuestHome";
+import UserHome from "../UserHome/UserHome";
+import AdminHome from "../AdminHome/AdminHome";
 
 type HomeProps = {
     user: UserModel
@@ -8,18 +11,22 @@ type HomeProps = {
 
 function Home(props: HomeProps): JSX.Element {
 
-    const isAdmin = props.user.isAdmin;
-
-    if (isAdmin) {
+    if (!props.user) {
         return (
             <>
-                <VacationListAdmin />
+                <Hero />
+                <GuestHome />
             </>
         );
     }
 
     return (
-        <VacationList />
+        <>
+            <Box>
+                <Hero user={props.user} />
+                {props.user.isAdmin ? <AdminHome /> : <UserHome />}
+            </Box>
+        </>
     );
 }
 

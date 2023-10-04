@@ -1,22 +1,7 @@
-1. Check if JS/TS date syntax is in sync with MySQL date syntax. (Not datetime!)
-2. Finish Secure Coding: SQLi protection in auth-service.ts
-3. Change or remove updateUser in auth-service
-4. Pick a way to do user IDs and finish creating the system for it.
+Backend:
+1. Change or remove updateUser in auth-service
+2. Hash password on client-side before sending over HTTP request.
 
-5. Elaborate on token system - Add refresh token and limit access token lifetime.
-6. Elaborate on error notification on client-side: Add recognition for forbidden requests and prompt user to log in.
-7. Hash password on client-side before sending over HTTP request.
-
-8. Implement rate limiting
-9. Only show "Welcome back" on first refresh. Use session storage to store state. 
-10. Token logic: If access token is valid but refresh token isn't, currently user gets access. Decide how to handle.
-11. Token Logic: Currently when the user logs out the system removes all refresh tokens associated with the user. 
-    This means that the user is logged out of all their devices. The issue is that using my system both the token refresh   
-    and logout happen simultaneously. This makes it hard to lock onto the UUID pair that is relevant for deletion.
-12. Add dev log file location in backend in AppConfig
-13. Number inputs allow 'e','E','-','+' when force-pasted. How to fix, hmm?
-
-
-C. Get rid of the annoying 0 in Add/Edit vacations.
-D. Add main menu/home page. Guests can sign up or sign in. Users can view vacations, filter vacations or sign out. Admins can add/edit/delete vacations, view report, download CSV or sign out.
-    Must show user/admin full name.
+Frontend:
+A. Number inputs allow 'e','E','-','+' when force-pasted. How to fix, hmm?
+B. Get rid of the annoying 0 in Add/Edit vacations.
