@@ -101,7 +101,7 @@ class DataService {
     // Get IDs of vacations the user follows:
     public async getUserFollowIDs(): Promise<number[]> {
         try {
-            const response = await axios.get<number[]>(appConfig.serverUrl + `user/follows`, { withCredentials: true });
+            const response = await axios.get<number[]>(appConfig.serverUrl + `/followids`, { withCredentials: true });
             return response.data;
         }
         catch (err: any) {

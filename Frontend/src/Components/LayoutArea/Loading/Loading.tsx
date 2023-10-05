@@ -5,7 +5,7 @@ function Loading(): JSX.Element {
     return (
         <div className="Loading">
             <LinearProgress color="info" />
-            <LinearProgress color="secondary" />
+            <LinearProgress color="success" />
             <LinearProgress color="primary" />
         </div>
     );

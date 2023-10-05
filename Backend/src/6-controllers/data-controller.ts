@@ -141,6 +141,19 @@ router.get("/vacations/:id/follow", requireToken, async (request: ExpandedReques
     }
 });
 
+router.get("/followids", requireToken, async (request: ExpandedRequest, response: Response, next: NextFunction) => {
+    try {
+        const userId = request.user.userId;
+        
+        const vacationIds = await dataService.getUserFollowIDs(userId);
+
+        response.json(vacationIds);
+    }
+    catch(err: any) {
+        next(err);
+    }
+});
+
 // USERS AREA
 router.get("/users", [requireToken, blockNonAdmin], async (request: Request, response: Response, next: NextFunction) => {
     try {
@@ -173,19 +186,6 @@ router.patch("/users/:id", [requireToken, blockNonAdmin], async (request: Reques
         response.send()
     }
     catch (err: any) {
-        next(err);
-    }
-});
-
-router.get("/user/follows", requireToken, async (request: ExpandedRequest, response: Response, next: NextFunction) => {
-    try {
-        const userId = request.user.userId;
-        
-        const vacationIds = await dataService.getUserFollowIDs(userId);
-
-        response.json(vacationIds);
-    }
-    catch(err: any) {
         next(err);
     }
 });

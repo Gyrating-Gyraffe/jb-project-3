@@ -58,7 +58,7 @@ function EditVacation(): JSX.Element {
             dataService.updateVacation(vacation)
                 .then(() => {
                     notifyService.success(`Vacation to ${vacation.destination} updated successfully! Database ID: ${vacation.vacationId}`);
-                    navigate('/home');
+                    navigate('/admin/vacations');
                 })
                 .catch(err => notifyService.error(err));
         }
@@ -66,7 +66,7 @@ function EditVacation(): JSX.Element {
             dataService.addVacation(vacation)
                 .then(res => {
                     notifyService.success(`Vacation to ${res.destination} added successfully! Database ID: ${res.vacationId}`);
-                    navigate('/home');
+                    navigate('/admin/vacations');
                 })
                 .catch(err => notifyService.error(err));
         }

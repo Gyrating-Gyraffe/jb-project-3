@@ -3,6 +3,7 @@ FROM node:18-alpine3.18
 
 # Node.js Global installations:
 RUN npm i -g ts-node
+RUN npm i -g nodemon
 
 # Create project directory:
 WORKDIR /app

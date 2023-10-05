@@ -66,7 +66,7 @@ function VacationListAdmin(): JSX.Element {
                 <Typography variant="h6" align="center" gutterBottom>
                     Like the website?
                 </Typography>
-                <Typography variant="subtitle1" align="center" color="text.secondary" component="p">
+                <Typography variant="subtitle1" align="center" color="text.secondary">
                     Check out more at: <a href="https://github.com/Gyrating-Gyraffe" target="_blank">
                         https://github.com/Gyrating-Gyraffe</a>
                 </Typography>

@@ -32,8 +32,8 @@ async function requireToken(request: ExpandedRequest, response: Response, next: 
             }
             
             // If we got a new token pair set it in response cookies:
-            response.cookie('refresh_token', tokenPair.refresh_token, { httpOnly: true, secure: true, maxAge: 2592000000 });
-            response.cookie('access_token', tokenPair.access_token, { httpOnly: true, secure: true, maxAge: 900000 });
+            response.cookie('refresh_token', tokenPair.refresh_token, { httpOnly: true, secure: true, sameSite: "strict", maxAge: 2592000000 });
+            response.cookie('access_token', tokenPair.access_token, { httpOnly: true, secure: true, sameSite: "strict", maxAge: 900000 });
             next();
         }
         else

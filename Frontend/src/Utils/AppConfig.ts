@@ -4,8 +4,9 @@ interface ExternalApi {
 }
 
 class AppConfig {
-    public serverUrl = "http://localhost:4000/api/";
-    public clientUrl = "http://localhost:3000/";
+    public serverUrl = this.baseUrl + "/api/";
+
+    public constructor (private baseUrl: string) { }
 
     public externalApi: ExternalApi = {
         googleMapsUrl: 'https://www.google.com/maps/search/',
@@ -13,6 +14,19 @@ class AppConfig {
     };
 }
 
-const appConfig = new AppConfig();
+class DevelopmentConfig extends AppConfig {
+    public constructor() {
+        super("http://localhost:4000");
+    }
+}
+
+class ProductionConfig extends AppConfig {
+    public constructor() {
+        super("");
+    }
+}
+
+
+const appConfig = new ProductionConfig();
 
 export default appConfig;

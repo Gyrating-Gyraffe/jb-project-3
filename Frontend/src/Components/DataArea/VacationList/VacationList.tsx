@@ -8,13 +8,12 @@ import dataService from "../../../Services/DataService";
 import notifyService from "../../../Services/NotifyService";
 import filterAndSort, { ActiveFilters, ComparisonType } from "../../../Utils/FilterAndSort";
 import followHandler from "../../../Utils/FollowHandler";
+import paginationHandler from "../../../Utils/PaginationHandler";
 import Copyright from "../../LayoutArea/Copyright/Copyright";
 import Hero from "../../LayoutArea/Hero/Hero";
 import Loading from "../../LayoutArea/Loading/Loading";
 import FilterSortControls from "../FilterSortControls/FilterSortControls";
 import VacationCard from "../VacationCard/VacationCard";
-import paginationHandler from "../../../Utils/PaginationHandler";
-import VacationOverSticker from "../../LayoutArea/VacationOverSticker/VacationOverSticker";
 
 
 function VacationList(): JSX.Element {

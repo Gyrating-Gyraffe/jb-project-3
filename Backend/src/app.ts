@@ -1,15 +1,16 @@
 require('dotenv').config()
 
-import express from "express";
-import cors from "cors";
-import dataController from "./6-controllers/data-controller";
-import authController from "./6-controllers/auth-controller"
-import routeNotFound from "./4-middleware/route-not-found";
-import catchAll from "./4-middleware/catch-all";
-import appConfig from "./2-utils/app-config";
-import expressFileUpload from "express-fileupload";
 import cookieParser from "cookie-parser";
+import cors from "cors";
+import express from "express";
+import expressFileUpload from "express-fileupload";
+import appConfig from "./2-utils/app-config";
+import paths from "./2-utils/paths";
+import catchAll from "./4-middleware/catch-all";
 import expressRateLimit from "./4-middleware/rate-limit";
+import authController from "./6-controllers/auth-controller";
+import dataController from "./6-controllers/data-controller";
+import { routeNotFound, pageNotFound } from "./4-middleware/not-found-middleware";
 
 const server = express();
 
@@ -23,9 +24,11 @@ server.use(cors(corsOptions));
 server.use(cookieParser());
 server.use(express.json());
 server.use(expressFileUpload());
+server.use("/", express.static(paths.frontendFolder))
 server.use("/api/auth", expressRateLimit);
 server.use("/api", [dataController, authController]);
-server.use("*", routeNotFound);
+server.use("/api/*", routeNotFound);
+server.use("/*", pageNotFound);
 server.use(catchAll);
 
 server.listen(appConfig.port, () => console.log("Listening on " + appConfig.domainName));

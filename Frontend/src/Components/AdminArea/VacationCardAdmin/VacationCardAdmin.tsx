@@ -19,8 +19,13 @@ function VacationCardAdmin(props: VacationCardAdminProps): JSX.Element {
     // Country flag URL:
     const [flagUrl, setFlagUrl] = useState<string>('');
 
+    // Create image object from imageUrl for dimensions of image in DB:
+    const dbImage = new Image();
+    useEffect(() => { dbImage.src = props.vacation.imageUrl; }, [props.vacation.imageUrl])
+
     // Get country flag's URL:
-    useEffect(() => { getFlag().then(res => setFlagUrl(res)).catch(err => console.log(err)) }, [])
+    useEffect(() => { getFlag().then(res => setFlagUrl(res)).catch(err => console.log(err)) }, []);
+
 
     async function getFlag(): Promise<string> {
         return await countryFlag.getFlagUrl(props.vacation.destination.split(', ')[1] || props.vacation.destination);
@@ -31,13 +36,9 @@ function VacationCardAdmin(props: VacationCardAdminProps): JSX.Element {
         return price.toLocaleString();
     }
 
-    // Create image object from imageUrl for dimensions of image in DB:
-    const dbImage = new Image();
-    dbImage.src = props.vacation.imageUrl;
-
     return (
         <Paper elevation={5} sx={{
-            width: 380, m: 8, display: 'flex', flexDirection: 'column', justifyContent: 'space-between',
+            width: 380, maxWidth: '80vw', m: 8, display: 'flex', flexDirection: 'column', justifyContent: 'space-between',
             backgroundColor: '#eaf8fd'
         }}>
             {/* Admin Controls */}

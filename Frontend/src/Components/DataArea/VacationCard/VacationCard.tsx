@@ -35,7 +35,7 @@ function VacationCard(props: VacationCardProps): JSX.Element {
 
     return (
         <Paper elevation={5} sx={{
-            width: 380, m: 8, display: 'flex', flexDirection: 'column', justifyContent: 'space-between',
+            width: 380, maxWidth: '80vw', m: 8, display: 'flex', flexDirection: 'column', justifyContent: 'space-between',
             backgroundColor: '#eaf8fd'
         }}>
             {/* <CardContentArea> */}

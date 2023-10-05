@@ -1,0 +1,72 @@
+version: "3.8"
+
+# All services:
+services:
+
+  # API Service (Backend):
+  api-service:
+
+    # Image name:
+    image: gyratinggyraffe/red-cardinal-api:1.0
+
+    # Where is the docker file location:
+    build: ./Backend
+
+    # Container name:
+    container_name: red-cardinal-api
+
+    # Port binding (host:container):
+    ports:
+      - 4000:4000
+
+    # On crash - what to do (restart unless stopped manually):
+    restart: unless-stopped
+
+    # Environment variables:
+    environment:
+      - MYSQL_HOST=red-cardinal-db.cofv2mnqsrbd.eu-north-1.rds.amazonaws.com
+      - MYSQL_USER=admin
+      - MYSQL_PASSWORD=12345678
+      - MYSQL_DATABASENAME=vacations-db
+      - NODE_ENV=development
+      - PORT=4000
+      - HOST=localhost
+      - ORIGIN=http://localhost
+      - IMG_URL=api/images
+
+# --------------------------------------------------------------------------------------------
+
+  # Client Service (Frontend):
+  client-service:
+
+    # What his service depends on:
+    depends_on:
+      - api-service
+
+    # Image name:
+    image: gyratinggyraffe/red-cardinal-client:1.0
+
+    # Where is the docker file location:
+    build: ./Frontend
+
+    # Container name:
+    container_name: red-cardinal-client
+
+    # Port binding (host:container):
+    ports:
+      - 80:3000
+
+    # On crash - what to do (restart unless stopped manually):
+    restart: unless-stopped
+
+    # Environment variables:
+    environment:
+      MYSQL_HOST: red-cardinal-db.cofv2mnqsrbd.eu-north-1.rds.amazonaws.com
+      MYSQL_USER: admin
+      MYSQL_PASSWORD: 12345678
+      MYSQL_DATABASENAME: vacations-db
+
+# --------------------------------------------------------------------------------------------
+
+volumes:
+  red-cardinal:

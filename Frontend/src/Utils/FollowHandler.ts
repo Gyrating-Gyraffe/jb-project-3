@@ -21,8 +21,14 @@ class FollowHandler {
     // Check if a given vacation is in the userFollowIDs array:
     public checkFollow(vacationId: number): boolean {
 
-        // Check against Redux state:
-        const filtered = globalStore.getState().userFollowIDs.filter(id => id === vacationId);      
+        // Get Redux state:
+        const followIDs = globalStore.getState().userFollowIDs;
+
+        // Escape if no state returns or if array length is 0:
+        if(!followIDs || followIDs.length === 0) return false;
+
+        // Check if we follow given vacation:
+        const filtered = followIDs.filter(id => id === vacationId);      
 
         return filtered?.length > 0;
     }
@@ -45,7 +51,7 @@ class FollowHandler {
     public updateUserFollowIDs(isFollowing: boolean, vacation: VacationModel) {
 
         // Get Redux state:
-        let newFollowIDs = globalStore.getState().userFollowIDs;
+        let newFollowIDs = globalStore.getState().userFollowIDs || [];
 
         // Add follow:
         if (isFollowing) {

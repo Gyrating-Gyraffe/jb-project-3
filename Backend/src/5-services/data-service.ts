@@ -9,7 +9,7 @@ import appConfig from "../2-utils/app-config";
 async function getAllVacations(): Promise<VacationModel[]> {
     // Create sql: 
     const sql = `SELECT vacationId, destination, description, startDate, endDate, price,
-                    CONCAT('${appConfig.domainName}/${appConfig.imageUrl}/vacations/', imageName) as imageUrl, followerCount
+                    CONCAT('/api/images/vacations/', imageName) as imageUrl, followerCount
                 FROM vacations`;
 
     const vacations = await dal.execute(sql);
@@ -22,7 +22,7 @@ async function getAllVacations(): Promise<VacationModel[]> {
 async function getVacation(vacationId: number): Promise<VacationModel> {
     // Create sql: 
     const sql = `SELECT vacationId, destination, description, startDate, endDate, price,
-                    CONCAT('${appConfig.domainName}/${appConfig.imageUrl}/vacations/', imageName) as imageUrl, followerCount
+                    CONCAT('/api/images/vacations/', imageName) as imageUrl, followerCount
                 FROM vacations WHERE vacationId = ?`;
 
     const vacation = await dal.execute(sql, [vacationId]);

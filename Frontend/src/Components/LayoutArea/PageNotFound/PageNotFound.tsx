@@ -33,9 +33,8 @@ function PageNotFound(): JSX.Element {
 
                 <CardMedia component={'img'}
                     image={heinzThe404Bird}
-                    height="450"
                     alt="404 bird"
-                    sx={{ objectFit: 'contain', width: '450px', flex: 1 }}
+                    sx={{ objectFit: 'contain', width: "400px", maxWidth: '100vw', height: 'auto', flex: 1 }}
                 >
 
                 </CardMedia>

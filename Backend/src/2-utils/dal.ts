@@ -1,12 +1,12 @@
 import mysql from "mysql";
 import appConfig from "./app-config";
 
-// Create a connection to MySQL's northwind database:
+// Create a connection to the AWS RDS database instance:
 const connection = mysql.createPool({
-    host: appConfig.host,
-    user: appConfig.user,
-    password: appConfig.password,
-    database: appConfig.database,
+    host: appConfig.mysql_host,
+    user: appConfig.mysql_user,
+    password: appConfig.mysql_password,
+    database: appConfig.mysql_databaseName,
     multipleStatements: true
 });
 
