@@ -6,7 +6,7 @@ interface ExternalApi {
 class AppConfig {
     public serverUrl = this.baseUrl + "/api/";
 
-    public constructor (private baseUrl: string) { }
+    public constructor (public baseUrl: string) { }
 
     public externalApi: ExternalApi = {
         googleMapsUrl: 'https://www.google.com/maps/search/',

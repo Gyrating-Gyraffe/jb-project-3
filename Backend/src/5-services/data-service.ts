@@ -46,7 +46,7 @@ async function addVacation(vacation: VacationModel): Promise<VacationModel> {
     vacation.vacationId = info.insertId;
 
     // Get image url:
-    vacation.imageUrl = `${appConfig.origin}/api/vacations/${imageName}`;
+    vacation.imageUrl = `${appConfig.domainName}/api/vacations/${imageName}`;
 
     // Remove image from vacation object because we don't response it back:
     delete vacation.image;

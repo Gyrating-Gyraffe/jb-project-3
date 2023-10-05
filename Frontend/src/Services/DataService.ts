@@ -11,8 +11,13 @@ class DataService {
             // Vacations as they are in the database:
             const dbVacations = response.data;
 
-            // Remap database vacations to client-specific vacation models:
-            const clientVacations = dbVacations.map(vacation => new VacationModel(vacation));
+            // Remap database vacations to client-specific vacation models...
+            // Performs database-client date conversion and imageUrl adaption (Backend returned imageUrl is relative path):
+            const clientVacations = dbVacations.map(vacation => {
+                const newVacation = new VacationModel(vacation);
+                newVacation.imageUrl = appConfig.baseUrl + newVacation.imageUrl;
+                return newVacation;
+            });
 
             return clientVacations;
         }
@@ -63,7 +68,7 @@ class DataService {
             if (vacation.imageUrl) {
                 const imageBlob = await fetch(vacation.imageUrl).then((response) => response.blob());
                 formData.append("image", imageBlob, "image.jpg");
-            }       
+            }
 
             const response = await axios.patch<VacationModel>(appConfig.serverUrl + `vacations/${vacation.vacationId}`, formData, {
                 headers: {
@@ -83,7 +88,7 @@ class DataService {
 
             return response.status === StatusCode.NoContent;
         }
-        catch(err: any) {
+        catch (err: any) {
             this.catchErr(err);
         }
     }
@@ -127,7 +132,7 @@ class DataService {
         const formData = new FormData();
 
         // Append vacation data to FormData:
-        if(vacation.vacationId)
+        if (vacation.vacationId)
             formData.append("vacationId", vacation.vacationId.toString());
         formData.append("destination", vacation.destination);
         formData.append("description", vacation.description);

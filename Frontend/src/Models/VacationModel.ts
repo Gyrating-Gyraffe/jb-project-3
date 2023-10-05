@@ -1,5 +1,6 @@
 import Joi from "joi";
 import { FormValidationError } from "./ClientErrors";
+import appConfig from "../Utils/AppConfig";
 
 class VacationModel {
     public vacationId?: number;

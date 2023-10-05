@@ -5,7 +5,6 @@ import { Box, Button, CardActions, CardContent, CardMedia, Paper, Typography } f
 import { useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
 import VacationModel from "../../../Models/VacationModel";
-import appConfig from "../../../Utils/AppConfig";
 import countryFlag from "../../../Utils/CountryFlag";
 
 type VacationCardAdminProps = {
@@ -13,19 +12,29 @@ type VacationCardAdminProps = {
     onDelete: Function
 }
 
+type ImageDimensions = {
+    width: number;
+    height: number;
+}
+
 
 function VacationCardAdmin(props: VacationCardAdminProps): JSX.Element {
+
+    const [imageDimensions, setImageDimensions] = useState<ImageDimensions>({ width: 0, height: 0 });
 
     // Country flag URL:
     const [flagUrl, setFlagUrl] = useState<string>('');
 
-    // Create image object from imageUrl for dimensions of image in DB:
-    const dbImage = new Image();
-    useEffect(() => { dbImage.src = props.vacation.imageUrl; }, [props.vacation.imageUrl])
-
     // Get country flag's URL:
     useEffect(() => { getFlag().then(res => setFlagUrl(res)).catch(err => console.log(err)) }, []);
 
+    // Get vacation source image dimensions (As they are in the database):
+    useEffect(() => {
+        const dbImage = new Image();
+        dbImage.src = props.vacation.imageUrl;
+
+        dbImage.onload = () => { setImageDimensions({ width: dbImage.width, height: dbImage.height }) };
+    }, [props.vacation.imageUrl]);
 
     async function getFlag(): Promise<string> {
         return await countryFlag.getFlagUrl(props.vacation.destination.split(', ')[1] || props.vacation.destination);
@@ -35,6 +44,7 @@ function VacationCardAdmin(props: VacationCardAdminProps): JSX.Element {
     function formatPrice(price: number): string {
         return price.toLocaleString();
     }
+
 
     return (
         <Paper elevation={5} sx={{
@@ -58,8 +68,8 @@ function VacationCardAdmin(props: VacationCardAdminProps): JSX.Element {
             </Box>
             {/* <CardContentArea> */}
             <CardContent sx={{ flex: 3 }}>
-                <Box position='absolute' bgcolor='primary.main' p={3} color='white'>
-                    DB Image Dimensions: <br /> {dbImage.width}x{dbImage.height}
+                <Box position='absolute' color='white' bgcolor='primary.main' p={6} fontSize={14}>
+                    DB Image Dimensions: <br /> {imageDimensions.width}x{imageDimensions.height} <br />
                 </Box>
                 <CardMedia
                     component="img"
