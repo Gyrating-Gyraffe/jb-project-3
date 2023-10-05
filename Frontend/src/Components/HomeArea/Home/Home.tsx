@@ -4,6 +4,7 @@ import Hero from "../../LayoutArea/Hero/Hero";
 import GuestHome from "../GuestHome/GuestHome";
 import UserHome from "../UserHome/UserHome";
 import AdminHome from "../AdminHome/AdminHome";
+import Copyright from "../../LayoutArea/Copyright/Copyright";
 
 type HomeProps = {
     user: UserModel
@@ -16,16 +17,16 @@ function Home(props: HomeProps): JSX.Element {
             <>
                 <Hero />
                 <GuestHome />
+                <Copyright  mt={15} />
             </>
         );
     }
 
     return (
         <>
-            <Box>
-                <Hero user={props.user} />
-                {props.user.isAdmin ? <AdminHome /> : <UserHome />}
-            </Box>
+            <Hero user={props.user} />
+            {props.user.isAdmin ? <AdminHome /> : <UserHome />}
+            <Copyright mt={15} />
         </>
     );
 }

@@ -68,31 +68,38 @@ function VacationCard(props: VacationCardProps): JSX.Element {
                         Starting At: {formatPrice(props.vacation.price)}$
                     </Typography>
                 </Box>
-                <Box width={'102%'} color={'red'} sx={{
-                    margin: 0, padding: 5, translate: '-4px', display: 'flex',
-                    flexDirection: 'row', justifyContent: 'flex-end'
-                }}>
-                    <Button size="medium" color={'inherit'} variant='contained' onClick={() => props.onFollow(props.vacation)} sx={{ marginInline: 2, flex: 3 }}>
-                        <Typography sx={{ textTransform: 'capitalize', fontWeight: '500' }}>
-                            {props.followState ? 'Unfollow' : 'Follow'}
-                        </Typography> &nbsp;
-                        {props.followState ? <FavoriteIcon /> : <FavoriteBorderIcon />} &nbsp;
-                        <Typography sx={{ fontWeight: '500' }}>
-                            {props.vacation.followerCount}
-                        </Typography>
-                    </Button>
-                    <Button size="medium" color={'primary'} variant='contained' component={NavLink}
-                        to={appConfig.externalApi.wikipediaUrl + props.vacation.destination} target='_blank' sx={{ marginInline: 3 }}>
-                        <InfoIcon sx={{ maxWidth: '30px' }} />
-                    </Button>
-                    <Button size="medium" color={'primary'} variant='contained' component={NavLink}
-                        to={`/vacations/album/${props.vacation.vacationId}`} sx={{ marginInline: 3 }}>
-                        <PhotoLibraryIcon />
-                    </Button>
-                    <Button size="medium" color={'primary'} variant='contained' component={NavLink}
-                        to={appConfig.externalApi.googleMapsUrl + props.vacation.destination} target='_blank' sx={{ marginInline: 3 }}>
-                        <PlaceIcon />
-                    </Button>
+
+                <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', flexWrap: 'wrap' }}>
+                    <Box width={'102%'} color={'red'} sx={{
+                        marginBottom: 4, marginTop: 10, paddingInline: 10, translate: '-4px', display: 'flex',
+                        flexDirection: 'row', justifyContent: 'center', gap: 4, flexWrap: 'wrap'
+                    }}>
+                        <Button size="medium" color={'primary'} variant='contained' component={NavLink}
+                            to={appConfig.externalApi.wikipediaUrl + props.vacation.destination} target='_blank' sx={{ flex: 1 }}>
+                            <InfoIcon sx={{ maxWidth: '30px' }} />
+                        </Button>
+                        <Button size="medium" color={'primary'} variant='contained' component={NavLink}
+                            to={`/vacations/album/${props.vacation.vacationId}`} sx={{ flex: 1 }}>
+                            <PhotoLibraryIcon sx={{ maxWidth: '30px' }} />
+                        </Button>
+                        <Button size="medium" color={'primary'} variant='contained' component={NavLink}
+                            to={appConfig.externalApi.googleMapsUrl + props.vacation.destination} target='_blank' sx={{ flex: 1 }}>
+                            <PlaceIcon sx={{ maxWidth: '30px' }} />
+                        </Button>
+                    </Box>
+                    <Box width={'102%'} color={'red'} sx={{
+                        marginBottom: 10, paddingInline: 10, translate: '-4px', display: 'flex'
+                    }}>
+                        <Button size="medium" color={'inherit'} variant='contained' onClick={() => props.onFollow(props.vacation)} sx={{ flex: 2, minWidth: '120px', maxWidth: '100%' }}>
+                            <Typography sx={{ textTransform: 'capitalize', fontWeight: '500' }}>
+                                {props.followState ? 'Unfollow' : 'Follow'}
+                            </Typography> &nbsp;
+                            {props.followState ? <FavoriteIcon /> : <FavoriteBorderIcon />} &nbsp;
+                            <Typography sx={{ fontWeight: '500' }}>
+                                {props.vacation.followerCount}
+                            </Typography>
+                        </Button>
+                    </Box>
                 </Box>
             </CardActions>
         </Paper>

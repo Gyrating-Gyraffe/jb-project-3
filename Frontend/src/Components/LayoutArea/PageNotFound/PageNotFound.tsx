@@ -12,9 +12,9 @@ function PageNotFound(): JSX.Element {
 
     return (
         <>
-            <Box display={'flex'} flexDirection={'row'} justifyContent={'space-between'} m={"auto"} p={50} flexWrap={'wrap'} >
-                <Box flex={1}>
-                    <Typography variant="h1" fontSize={170} fontWeight={700} color={"primary"}>
+            <Box display={'flex'} flexDirection={'row'} justifyContent={'space-between'} m={"auto"} p={'10vw'} flexWrap={'wrap'} >
+                <Box width={'400px'} maxWidth={'80vw'} flex={1}>
+                    <Typography variant="h1" fontSize={'7em'} fontWeight={700} color={"primary"}>
                         404
                     </Typography>
                     <Typography variant="h2" fontWeight={700} color={"text.secondary"}>
@@ -34,7 +34,7 @@ function PageNotFound(): JSX.Element {
                 <CardMedia component={'img'}
                     image={heinzThe404Bird}
                     alt="404 bird"
-                    sx={{ objectFit: 'contain', width: "400px", maxWidth: '100vw', height: 'auto', flex: 1 }}
+                    sx={{ objectFit: 'contain', width: "400px", maxWidth: '80vw', height: 'auto', flex: 1 }}
                 >
 
                 </CardMedia>

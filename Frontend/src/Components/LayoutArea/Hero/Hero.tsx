@@ -10,7 +10,7 @@ function Hero(props: HeroProps): JSX.Element {
     return (
         <Box sx={{ pt: 0, pb: 6, mt: 15 }}>
             <Container maxWidth="sm">
-                <Box component={"img"} width={'400px'} maxWidth={'100vw'} height={220}
+                <Box component={"img"} width={'400px'} maxWidth={'97vw'} height={'auto'}
                     src={cardinalLogo} />
                 <Typography variant="h5" fontStyle={'italic'} align="center" color="text.secondary">
                     {props.user ?

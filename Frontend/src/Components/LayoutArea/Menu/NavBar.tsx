@@ -65,8 +65,9 @@ function NavBar(props: NavBarProps) {
                     
                     <Typography className='text-link' variant="h5" noWrap component={NavLink} to={"/home"}
                         sx={{
-                            mr: 2, display: { xs: 'flex', md: 'none' }, flexGrow: 1, fontFamily: 'monospace',
-                            fontWeight: 700, letterSpacing: '.3rem', color: 'inherit', textDecoration: 'none'
+                            mr: 7, display: { xs: 'flex', md: 'none' }, flexGrow: 1, fontFamily: 'monospace',
+                            fontWeight: 700, letterSpacing: '.3rem', color: 'inherit', textDecoration: 'none',
+                            justifyContent: 'flex-start' 
                         }}
                     >
                         <HomeIcon sx={{ display: { xs: 'flex', md: 'none' }, mb: 'auto', mt: 'auto', mr: 3 }} />
@@ -77,7 +78,7 @@ function NavBar(props: NavBarProps) {
                     
                     <Typography variant="h6" noWrap component={NavLink} to={"/home"}
                         sx={{
-                            mr: 2, display: { xs: 'none', md: 'flex' }, fontFamily: 'monospace', fontWeight: 700,
+                            mr: 2, display: { xs: 'none', md: 'flex' }, justifyContent: 'flex-start' , fontFamily: 'monospace', fontWeight: 700,
                             letterSpacing: '.3rem', color: 'inherit', textDecoration: 'none'
                         }}
                     >

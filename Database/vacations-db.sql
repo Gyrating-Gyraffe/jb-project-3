@@ -87,7 +87,8 @@ CREATE TABLE `vacations` (
   `startDate` date NOT NULL,
   `endDate` date NOT NULL,
   `price` int(11) NOT NULL,
-  `imageName` varchar(100) NOT NULL
+  `imageName` varchar(100) NOT NULL,
+  `followerCount` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='Vacations the website offers.';
 
 --

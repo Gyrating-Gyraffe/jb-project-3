@@ -17,7 +17,7 @@ function UserHome(): JSX.Element {
                             alt="register"
                         />
                         <CardContent>
-                        <MeetingRoomTwoToneIcon sx={{ color: 'primary.main', zIndex: 3 }} />
+                            <MeetingRoomTwoToneIcon sx={{ color: 'primary.main', zIndex: 3 }} />
                             <Typography gutterBottom variant="h4" component="div" fontWeight={600} color={'primary'}>
                                 Sign Out
                             </Typography>
@@ -35,10 +35,10 @@ function UserHome(): JSX.Element {
                             height="170"
                             image={"https://source.unsplash.com/random?city"}
                             alt="login"
-                            sx={{filter: ''}}
+                            sx={{ filter: '' }}
                         />
                         <CardContent>
-                        <TravelExploreIcon sx={{ color: 'secondary.main', zIndex: 3 }} />
+                            <TravelExploreIcon sx={{ color: 'secondary.main', zIndex: 3 }} />
                             <Typography gutterBottom variant="h4" component="div" fontWeight={600} color={'secondary.light'}>
                                 Vacations
                             </Typography>
