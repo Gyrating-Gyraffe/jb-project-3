@@ -1,7 +1,0 @@
-Backend:
-1. Change or remove updateUser in auth-service
-2. Hash password on client-side before sending over HTTP request.
-
-Frontend:
-A. Number inputs allow 'e','E','-','+' when force-pasted. How to fix, hmm?
-B. Get rid of the annoying 0 in Add/Edit vacations.
