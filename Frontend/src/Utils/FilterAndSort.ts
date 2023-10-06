@@ -25,10 +25,17 @@ export enum SortType {
 // (For example: 'Oslo' is a value of type 'destination' which is a parameter of VacationModel):
 type ValueOf<T> = T[keyof T];
 
-class FilterAndSort {
+export class FilterAndSort {
 
-    // Generic filter:
-    public filter<T>(collection: T[], filterBy: keyof T, filterValue: ValueOf<T>, comparisonType: ComparisonType = ComparisonType.Equal): T[] {
+    /** Generic filter.
+     * Uses a key and expected value to return a collection/array of matching elements.
+     * @param collection Collection/array to filter.
+     * @param filterBy Key by which to filter. Must be a key of generic type.
+     * @param filterValue Value to which we compare the keys.
+     * @param comparisonType Default: Equal. Type of logical comparison to apply. This determines what is 'true' and 'false' for the filter.
+     * @returns Collection/array of same type.
+     */
+    public static filter<T>(collection: T[], filterBy: keyof T, filterValue: ValueOf<T>, comparisonType: ComparisonType = ComparisonType.Equal): T[] {
         
         const newCollection = [...collection].filter((a) => {
             const aValue = a[filterBy];
@@ -62,8 +69,14 @@ class FilterAndSort {
         return newCollection;
     }
 
-    // Generic sort:
-    public sort<T>(collection: T[], sortBy: keyof T, sortType: SortType = SortType.Ascending): T[] {
+    /** Generic sort.
+     * Sorts a collection/array of elements based on a key and sorting type.
+     * @param {T[]} collection Collection/array to sort.
+     * @param {keyof T} sortBy Key by which to sort. Must be a key of generic type T.
+     * @param {SortType} [sortType=SortType.Ascending] Type of sorting to apply, either 'Ascending' or 'Descending'.
+     * @returns {T[]} Sorted collection/array of the same type.
+     */
+    public static sort<T>(collection: T[], sortBy: keyof T, sortType: SortType = SortType.Ascending): T[] {
 
         const newCollection = [...collection].sort((a, b) => {
             const aValue = a[sortBy];
@@ -89,6 +102,3 @@ class FilterAndSort {
     }
 
 }
-
-const filterAndSort = new FilterAndSort();
-export default filterAndSort;

@@ -51,10 +51,10 @@ async function deleteImage(vacationId: number): Promise<void> {
         // Extract old image name from returned array:
         let { oldImageName } = data[0];
 
-        // If the old image was the standard no-image placeholder, give empty string to avoid deleting it:
-        if (oldImageName === "no-image.jpg") oldImageName = "";
+        // If the old image was the standard no-image placeholder - stop:
+        if (oldImageName === "no-image.jpg") return;
 
-        // Get absolute path to save image:
+        // Get absolute path to remove image:
         const absolutePath = path.join(__dirname, "..", "1-assets", "images", oldImageName);
 
         // Remove image:

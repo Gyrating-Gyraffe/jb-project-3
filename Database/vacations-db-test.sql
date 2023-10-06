@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 06, 2023 at 01:39 PM
+-- Generation Time: Oct 06, 2023 at 01:36 PM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.2.4
 
@@ -34,17 +34,6 @@ CREATE TABLE `followers` (
   `vacationId` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='Many to many - users to vacations.';
 
---
--- Dumping data for table `followers`
---
-
-INSERT INTO `followers` (`userId`, `vacationId`) VALUES
-(1, 17),
-(1, 48),
-(1, 53),
-(1, 54),
-(1, 56);
-
 -- --------------------------------------------------------
 
 --
@@ -58,6 +47,13 @@ CREATE TABLE `refresh_tokens` (
   `clientUUID` varchar(36) NOT NULL COMMENT 'Unique for a client login',
   `addDate` datetime NOT NULL DEFAULT current_timestamp() COMMENT 'Not expiry date'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `refresh_tokens`
+--
+
+INSERT INTO `refresh_tokens` (`id`, `token`, `userId`, `clientUUID`, `addDate`) VALUES
+(438, 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7InVzZXJJZCI6MiwiZmlyc3ROYW1lIjoiSm9obiIsImxhc3ROYW1lIjoiQnJ5Y2UiLCJlbWFpbCI6ImpiQGdtYWlsLmNvbSIsImlzQWRtaW4iOjF9LCJjbGllbnRVVUlEIjoiNDI3ZDg3MTgtZWM5Zi00YjEwLWI3YTgtZGE3ODI3YjdlY2M0IiwiaWF0IjoxNjk2NTg1MDcxLCJleHAiOjE2OTcxODk4NzF9.NwK9sX-gQzIHxSSyKf_RBE9qYFAplB-1TdC68WW2RbU', 2, '427d8718-ec9f-4b10-b7a8-da7827b7ecc4', '2023-10-06 12:37:51');
 
 -- --------------------------------------------------------
 
@@ -106,14 +102,14 @@ CREATE TABLE `vacations` (
 
 INSERT INTO `vacations` (`vacationId`, `destination`, `description`, `startDate`, `endDate`, `price`, `imageName`, `followerCount`) VALUES
 (16, 'Santorini, Greece', 'Indulge in an unforgettable Mediterranean getaway on the picturesque island of Santorini. Wander through charming white-washed villages adorned with iconic blue-domed roofs,all while enjoying breathtaking sunsets over the Aegean Sea. With pristine beaches, ancient ruins, and delectable local cuisine, Santorini promises an idyllic escape for romance and relaxation.', '2023-09-13', '2023-09-20', 1500, '6e604b07-1274-4167-a2a2-9d28e0e3c35d.jpg', 0),
-(17, 'Oslo, Norway', 'Embark on a journey of Scandinavian elegance in Oslo, Norway\'s vibrant capital. Discover a city where modernity seamlessly merges with its rich historical roots. Explore the fascinating Viking Ship Museum, stroll through lush green parks, and be captivated by the beauty of Oslo\'s fjords. Savor the delights of Nordic cuisine and witness a burgeoning arts scene. Oslo invites culture and nature enthusiasts to revel in its unique charm.', '2023-10-10', '2023-10-17', 1200, 'ff3609e0-2af7-4629-90a6-796f0df23619.jpg', 1),
+(17, 'Oslo, Norway', 'Embark on a journey of Scandinavian elegance in Oslo, Norway\'s vibrant capital. Discover a city where modernity seamlessly merges with its rich historical roots. Explore the fascinating Viking Ship Museum, stroll through lush green parks, and be captivated by the beauty of Oslo\'s fjords. Savor the delights of Nordic cuisine and witness a burgeoning arts scene. Oslo invites culture and nature enthusiasts to revel in its unique charm.', '2023-10-10', '2023-10-17', 1200, 'ff3609e0-2af7-4629-90a6-796f0df23619.jpg', 0),
 (18, 'London, United Kingdom', 'Dive into the heart of London, a city teeming with history, culture, and iconic landmarks. Visit Buckingham Palace, explore the British Museum, and take a ride on the iconic London Eye. Delight in West End theater shows, indulge in world-class shopping, and savor the diverse culinary scene. London promises a dynamic blend of tradition and innovation.', '2023-11-05', '2023-11-12', 1800, 'ed8caf31-b224-4c26-a6a6-6636ddcbb592.jpg', 0),
 (20, 'Toronto, Canada', 'Experience the energetic vibes of Toronto, Canada\'s largest metropolis. Discover the awe-inspiring CN Tower, explore the eclectic neighborhoods, and take a stroll along the picturesque Lake Ontario waterfront. Immerse yourself in multicultural delights, from global cuisine to vibrant festivals. Toronto offers a perfect mix of urban adventure and natural beauty.', '2023-12-20', '2023-12-27', 1000, '7f4bc2a8-534b-4007-8530-df4fc3203545.jpg', 0),
-(48, 'Tel Aviv, Israel', 'Immerse yourself in Tel Aviv\'s energetic atmosphere! Experience golden beaches, savor delectable cuisine, and explore a city that seamlessly marries tradition with modernity. Discover your perfect Tel Aviv getaway today!', '2023-09-30', '2023-10-18', 2500, '7c746065-d53a-48fa-98f0-0c00133759e8.jpg', 1),
-(53, 'Kyoto, Japan', 'Immerse yourself in the timeless beauty of Kyoto, where ancient temples meet modern charm. Explore historic shrines, stroll through serene bamboo forests, and savor authentic Japanese cuisine in this cultural gem.', '2023-10-06', '2023-10-12', 2000, '309d0e7d-8594-4c64-a90e-e3ff34dc3f09.jpg', 1),
-(54, 'Bali, Indonesia', 'Escape to the paradise of Bali, where lush landscapes meet stunning beaches. Discover vibrant markets, tranquil rice terraces, and indulge in traditional Balinese spa treatments, all amidst breathtaking natural beauty.', '2023-10-08', '2023-10-14', 800, '6673f0c7-8ca6-4e23-ae9c-1c1123903587.jpg', 1),
+(48, 'Tel Aviv, Israel', 'Immerse yourself in Tel Aviv\'s energetic atmosphere! Experience golden beaches, savor delectable cuisine, and explore a city that seamlessly marries tradition with modernity. Discover your perfect Tel Aviv getaway today!', '2023-09-30', '2023-10-18', 2500, '7c746065-d53a-48fa-98f0-0c00133759e8.jpg', 0),
+(53, 'Kyoto, Japan', 'Immerse yourself in the timeless beauty of Kyoto, where ancient temples meet modern charm. Explore historic shrines, stroll through serene bamboo forests, and savor authentic Japanese cuisine in this cultural gem.', '2023-10-06', '2023-10-12', 2000, '309d0e7d-8594-4c64-a90e-e3ff34dc3f09.jpg', 0),
+(54, 'Bali, Indonesia', 'Escape to the paradise of Bali, where lush landscapes meet stunning beaches. Discover vibrant markets, tranquil rice terraces, and indulge in traditional Balinese spa treatments, all amidst breathtaking natural beauty.', '2023-10-08', '2023-10-14', 800, '6673f0c7-8ca6-4e23-ae9c-1c1123903587.jpg', 0),
 (55, 'Malé, Maldives', 'Experience ultimate luxury in the Maldives, a tropical haven of overwater bungalows and crystal-clear waters. Snorkel with vibrant marine life, unwind on pristine beaches, and create unforgettable memories in this idyllic destination.', '2023-10-10', '2023-10-17', 3500, 'f6372672-2f29-404e-b7c7-429c75add4f0.jpg', 0),
-(56, 'Sydney, Australia', 'Explore the vibrant heart of Australia in Sydney. Iconic landmarks like the Sydney Opera House and Bondi Beach await you. Enjoy a blend of urban adventures, coastal beauty, and world-class dining experiences.', '2023-10-12', '2023-10-18', 2000, 'fd10efb0-ade8-4d83-b875-27506d5f82fe.jpg', 1),
+(56, 'Sydney, Australia', 'Explore the vibrant heart of Australia in Sydney. Iconic landmarks like the Sydney Opera House and Bondi Beach await you. Enjoy a blend of urban adventures, coastal beauty, and world-class dining experiences.', '2023-10-12', '2023-10-18', 2000, 'fd10efb0-ade8-4d83-b875-27506d5f82fe.jpg', 0),
 (57, 'Rio de Janeiro, Brazil', 'Discover the rhythm of Rio de Janeiro, where samba beats and stunning landscapes captivate your senses. Witness the Christ the Redeemer statue, dance to the lively music, and relax on the famous Copacabana Beach.', '2023-10-20', '2023-10-25', 1900, '021f9aed-7dab-4c9e-abaf-37f22d8b02d3.jpg', 0),
 (58, 'Cape Town, South Africa', 'Discover the beauty of Cape Town, nestled beneath the iconic Table Mountain. Explore diverse landscapes, from pristine beaches to lush vineyards. Dive into history, wildlife, and a vibrant cultural scene in this South African gem.', '2023-10-29', '2023-11-04', 1100, '4770e86b-86cc-42ae-b7e3-f7b08adf0e57.jpg', 0),
 (59, 'Phuket, Thailand', 'Embark on an exotic adventure in Phuket, Thailand\'s largest island. Experience a blend of vibrant nightlife, serene beaches, and lush jungles. Explore ancient temples, savor mouthwatering Thai cuisine, and unwind in a tropical paradise.', '2023-12-09', '2023-12-15', 600, '5acc32e5-4a57-4af2-ab43-d1e588ab08d7.jpg', 0);
@@ -156,7 +152,7 @@ ALTER TABLE `vacations`
 -- AUTO_INCREMENT for table `refresh_tokens`
 --
 ALTER TABLE `refresh_tokens`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=441;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=439;
 
 --
 -- AUTO_INCREMENT for table `users`

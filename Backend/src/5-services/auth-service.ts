@@ -66,13 +66,14 @@ async function logout(user: UserModel, clientUUID: string): Promise<boolean> {
 
 // Relog the frontend with the user info from the access token cookie:
 async function relog(request: ExpandedRequest): Promise<UserModel> {
-    if(!request.user) throw new UnauthorizedError("You are not logged in");
-    
+    if (!request.user) throw new UnauthorizedError("You are not logged in");
+
     return request.user;
 }
 
 // Check the database if a given user (User Model) is an admin:
 async function isAdmin(user: UserModel): Promise<boolean> {
+
     if (!user?.userId) return null;
 
     const sql = `SELECT * FROM users WHERE userId = ? AND isAdmin = 1`;
@@ -84,17 +85,24 @@ async function isAdmin(user: UserModel): Promise<boolean> {
 
 // Adds a refresh token related to a given user:
 async function addRefreshToken(user: UserModel, oldUUID: string, clientUUID: string, token: string): Promise<boolean> {
-    if (!user?.userId) return null;
-    
-    // SQL Query first deletes existing tokens for the given client, then inserts a new one:
-    const sql = `DELETE FROM refresh_tokens WHERE clientUUID = ? AND userId = ?;
-                INSERT INTO refresh_tokens VALUES(DEFAULT, ?, ?, ?, DEFAULT);`;
-    
-    const info: OkPacket = await dal.execute(sql, [oldUUID, user.userId, token, user.userId, clientUUID]);
+    try {
+        
+        if (!user?.userId) return null;
+        
+        // SQL Query first deletes existing tokens for the given client, then inserts a new one:
+        const sql = `DELETE FROM refresh_tokens WHERE clientUUID = ? AND userId = ?;
+        INSERT INTO refresh_tokens VALUES(DEFAULT, ?, ?, ?, DEFAULT);`;
+        
+        const info: OkPacket = await dal.execute(sql, [oldUUID, user.userId, token, user.userId, clientUUID]);
+        
+        const insertId = info.insertId;
 
-    const insertId = info.insertId;
-
-    return !!insertId;
+        return !!insertId;
+    }
+    catch(err: any) {
+        console.log("Error in addRefreshToken: ", err);
+        return false;
+    }
 }
 
 // Gets the refresh token matching the client's UUID and the user's id. If none, returns null:

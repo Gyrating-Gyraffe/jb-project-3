@@ -17,6 +17,7 @@ class CountryFlag {
         }
         catch(err: any) {
             console.log(err); 
+            return '';
         }
     }
 }

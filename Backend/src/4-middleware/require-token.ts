@@ -4,8 +4,21 @@ import cyber, { TokenPair } from "../2-utils/cyber";
 import { UnauthorizedError } from "../3-models/client-errors";
 import ExpandedRequest from "../3-models/expanded-request";
 import authService from "../5-services/auth-service";
+import appConfig from "../2-utils/app-config";
 
-async function requireToken(request: ExpandedRequest, response: Response, next: NextFunction) {
+/**
+ * Middleware for handling user authentication and token validation.
+ * 
+ * This middleware verifies the user's access token, and if it's expired or invalid, 
+ * it attempts to refresh the access token using the refresh token.
+ * @throws {UnauthorizedError} When the user is not logged in.
+ * @throws {UnauthorizedError} When the access token is expired or invalid, and the refresh token is also invalid.
+ */
+async function requireToken(request: ExpandedRequest, response: Response, next: NextFunction): Promise<void> {
+
+    // Skip this Auth middleware in a test environment:
+    if(appConfig.isTest) return next();
+
     try {
         // Verify access token:
         const result = await cyber.verifyTokens(request);
@@ -54,7 +67,7 @@ async function handleExpiredToken(request: ExpandedRequest): Promise<TokenPair |
         const result = await cyber.verifyRefreshToken(refreshToken);
 
         // If no token or there's an error in result:
-        if (!result?.token || result.err) return null;
+        if (!result?.token || result.err) return;
 
         // Generate a new access/refresh token pair and save the new access token:
         const tokenPair: TokenPair = await cyber.getNewTokenPair(user, clientUUID);

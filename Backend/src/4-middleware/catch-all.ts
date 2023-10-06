@@ -1,9 +1,10 @@
 import { NextFunction, Request, Response } from "express";
+import appConfig from "../2-utils/app-config";
 
 function catchAll(err: any, request: Request, response: Response, next: NextFunction) {
     
     // Display error: 
-    console.log(err);
+    if(!appConfig.isTest) console.log(err);
 
     // Find status code: 
     const statusCode = err.status || 500; // Short Circuit

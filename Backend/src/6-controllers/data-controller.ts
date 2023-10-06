@@ -7,6 +7,7 @@ import blockNonAdmin from "../4-middleware/block-non-admin";
 import dataService from "../5-services/data-service";
 import requireToken from "../4-middleware/require-token";
 import ExpandedRequest from "../3-models/expanded-request";
+import { UnauthorizedError } from "../3-models/client-errors";
 
 const router = express.Router();
 
@@ -49,7 +50,7 @@ router.post("/vacations", [requireToken, blockNonAdmin], async (request: Expande
     }
 });
 
-router.patch("/vacations/:id", [requireToken, blockNonAdmin], async (request: Request, response: Response, next: NextFunction) => {
+router.patch("/vacations/:id", [requireToken, blockNonAdmin], async (request: ExpandedRequest, response: Response, next: NextFunction) => {
     try {
         // Add image from request.files into request.body:
         request.body.image = request.files?.image;
@@ -68,7 +69,7 @@ router.patch("/vacations/:id", [requireToken, blockNonAdmin], async (request: Re
     }
 });
 
-router.delete("/vacations/:id", [requireToken, blockNonAdmin], async (request: Request, response: Response, next: NextFunction) => {
+router.delete("/vacations/:id", [requireToken, blockNonAdmin], async (request: ExpandedRequest, response: Response, next: NextFunction) => {
     try {
         const vacationId = +request.params.id;
 
@@ -109,6 +110,7 @@ router.post("/vacations/:id/follow", requireToken, async (request: ExpandedReque
         // Get user id:
         const { user } = request;
         
+        if(!user) throw new UnauthorizedError("You must be logged in to follow");
 
         // Call service:
         const isFollowing = await dataService.followVacation(vacationId, user.userId);
@@ -130,6 +132,7 @@ router.get("/vacations/:id/follow", requireToken, async (request: ExpandedReques
         // Get user id:
         const { user } = request;
         
+        if(!user) throw new UnauthorizedError("No user found to check for follows");
 
         // Call service:
         const isFollowing = await dataService.getVacationFollowStatus(vacationId, user.userId);

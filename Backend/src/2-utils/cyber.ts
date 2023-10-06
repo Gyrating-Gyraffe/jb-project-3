@@ -21,7 +21,7 @@ interface AuthTokenPayload {
 }
 
 async function getNewTokenPair(user: UserModel, oldUUID?: string): Promise<TokenPair> {
-
+    
     // No old UUID means we're registering or logging in:
     if (!oldUUID) oldUUID = 'new';
 
@@ -35,7 +35,7 @@ async function getNewTokenPair(user: UserModel, oldUUID?: string): Promise<Token
     const payload = { user, clientUUID } as AuthTokenPayload;
 
     // Create refresh token:
-    const refreshTokenOptions = { expiresIn: "7d" };
+    const refreshTokenOptions = { expiresIn: "30d" };
     const refreshToken = jwt.sign(payload, jwtSecretKey, refreshTokenOptions);
 
     // Add refresh token to DB:
@@ -47,7 +47,7 @@ async function getNewTokenPair(user: UserModel, oldUUID?: string): Promise<Token
     }
 
     // Create access token:
-    const accessTokenOptions = { expiresIn: "10m" };
+    const accessTokenOptions = { expiresIn: "15m" };
     const accessToken = jwt.sign(payload, jwtSecretKey, accessTokenOptions);
 
     return { access_token: accessToken, refresh_token: refreshToken, clientUUID: clientUUID };

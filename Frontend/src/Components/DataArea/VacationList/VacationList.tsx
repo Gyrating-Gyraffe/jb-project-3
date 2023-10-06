@@ -6,7 +6,7 @@ import VacationModel from "../../../Models/VacationModel";
 import { GlobalState } from "../../../Redux/GlobalState";
 import dataService from "../../../Services/DataService";
 import notifyService from "../../../Services/NotifyService";
-import filterAndSort, { ActiveFilters, ComparisonType } from "../../../Utils/FilterAndSort";
+import { ActiveFilters, ComparisonType, FilterAndSort } from "../../../Utils/FilterAndSort";
 import followHandler from "../../../Utils/FollowHandler";
 import paginationHandler from "../../../Utils/PaginationHandler";
 import Copyright from "../../LayoutArea/Copyright/Copyright";
@@ -64,15 +64,15 @@ function VacationList(): JSX.Element {
         // Apply active filters:
         if (activeFilters.follow) filteredVacations = followHandler.filterByFollow(filteredVacations);
 
-        if (activeFilters.hasNotStarted) filteredVacations = filterAndSort.filter(filteredVacations, 'startDate', new Date(), ComparisonType.Smaller);
+        if (activeFilters.hasNotStarted) filteredVacations = FilterAndSort.filter(filteredVacations, 'startDate', new Date(), ComparisonType.Smaller);
 
         if (activeFilters.inProgress) {
-            filteredVacations = filterAndSort.filter(filteredVacations, 'startDate', new Date(), ComparisonType.BiggerEqual);
-            filteredVacations = filterAndSort.filter(filteredVacations, 'endDate', new Date(), ComparisonType.SmallerEqual);
+            filteredVacations = FilterAndSort.filter(filteredVacations, 'startDate', new Date(), ComparisonType.BiggerEqual);
+            filteredVacations = FilterAndSort.filter(filteredVacations, 'endDate', new Date(), ComparisonType.SmallerEqual);
         }
 
         // Apply date sorting:
-        filteredVacations = filterAndSort.sort(filteredVacations, 'startDate');
+        filteredVacations = FilterAndSort.sort(filteredVacations, 'startDate');
 
         const pageNextRender = handlePagination(filteredVacations);
 

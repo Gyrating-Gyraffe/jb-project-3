@@ -12,14 +12,23 @@ class AppConfig {
 class DevelopmentConfig extends AppConfig {
     public isDevelopment = true;
     public isProduction = false;
-    
+    public isTest = false;
+}
+
+class TestConfig extends AppConfig {
+    public isDevelopment = true;
+    public isTest = true;
+    public isProduction = false;
+    public mysql_databaseName = process.env.MYSQL_DATABASENAME_TEST;
 }
 
 class ProductionConfig extends AppConfig {
     public isDevelopment = false;
     public isProduction = true;
+    public isTest = false;
 }
 
-const appConfig = (process.env.NODE_ENV === "production") ? new ProductionConfig() : new DevelopmentConfig();
+const appConfig = (process.env.NODE_ENV === "production") ? new ProductionConfig() : 
+    (process.env.NODE_ENV === "test" ? new TestConfig() : new DevelopmentConfig());
 
 export default appConfig;
