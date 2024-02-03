@@ -42,7 +42,7 @@ function VacationList(): JSX.Element {
         // Get vacations from DB:
         dataService.getAllVacations()
             .then(data => {
-                setVacations(data);
+                setVacations(data || []);
                 setIsLoadingVacations(false);
             })
             .catch(err => {

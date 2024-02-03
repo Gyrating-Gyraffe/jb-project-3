@@ -8,7 +8,7 @@ class CountryFlag {
             if (res.data.length > 0) {
                 const countryCode = res.data[0].alpha2Code;
 
-                return `https://www.countryflagicons.com/SHINY/64/${countryCode}.png`;
+                return `https://flagsapi.com/${countryCode}/shiny/64.png`;
                 
             } else {
                 console.log(`Country "${countryName}" not found.`);
@@ -16,7 +16,7 @@ class CountryFlag {
             }
         }
         catch(err: any) {
-            console.log(err); 
+            console.log(err);
             return '';
         }
     }
