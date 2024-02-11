@@ -81,7 +81,6 @@ CREATE TABLE `users` (
 INSERT INTO `users` (`userId`, `firstName`, `lastName`, `email`, `password`, `isAdmin`) VALUES
 (1, 'Silvia', 'Imperva', 'impervia@gmail.com', '11ab08fc77516e1c9e61fe8a66a0d87fd9e1bd84dbe680acd89d23297e8cbf00c45df21a901ae1f1674a78dca32627aaf8cc2597c1ca22a942e92e6928c3205d', 0),
 (2, 'John', 'Bryce', 'jb@gmail.com', '2c14b168ed74dea4f7d73a3b9abb03240c8897965b77f2fce96073894d91a6fa0b5f4e044d40fa223c1641a6feb0ac5b99e19aecd89776042c629e64421d742f', 1),
-(15, 'Nickolay', 'Sachno', 'nickolaysachno@gmail.com', '29f5d98a28d16d4036ec62f19f3ccd88b0bf22b61284ab84402ee6f4e0e673172e7cc0f6fcc32650a755b1fe64252faf091e5cba7105363500217f565e27e2aa', 0);
 
 -- --------------------------------------------------------
 
