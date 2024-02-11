@@ -1,12 +1,11 @@
 class AppConfig {
     public port = process.env.PORT; // Load the port from .env
-    public host = process.env.HOST;
     public mysql_host = process.env.MYSQL_HOST;
     public mysql_user = process.env.MYSQL_USER;
     public mysql_password = process.env.MYSQL_PASSWORD;
     public mysql_databaseName = process.env.MYSQL_DATABASENAME;
     public origin = process.env.ORIGIN;
-    public domainName = `http://${this.host}:${this.port}`;
+    public domainName = `http://${this.mysql_host}:${this.port}`;
 }
 
 class DevelopmentConfig extends AppConfig {
