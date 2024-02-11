@@ -3,6 +3,9 @@ import EqualizerIcon from '@mui/icons-material/Equalizer';
 import VpnLockIcon from '@mui/icons-material/VpnLock';
 import MeetingRoomTwoToneIcon from '@mui/icons-material/MeetingRoomTwoTone';
 import { NavLink } from "react-router-dom";
+import vacationsCardImage from "../../../Assets/Images/vacations.png";
+import signOutCardImage from "../../../Assets/Images/signout.png";
+import dashboardCardImage from "../../../Assets/Images/dashboard.png";
 
 function AdminHome(): JSX.Element {
     return (
@@ -14,7 +17,7 @@ function AdminHome(): JSX.Element {
                         <CardMedia
                             component="img"
                             height="170"
-                            image={"https://source.unsplash.com/random?landscape"}
+                            image={signOutCardImage}
                             alt="register"
                         />
                         <CardContent>
@@ -34,7 +37,7 @@ function AdminHome(): JSX.Element {
                         <CardMedia
                             component="img"
                             height="170"
-                            image={"https://source.unsplash.com/random?city"}
+                            image={vacationsCardImage}
                             alt="register"
                         />
                         <CardContent>
@@ -54,7 +57,7 @@ function AdminHome(): JSX.Element {
                         <CardMedia
                             component="img"
                             height="170"
-                            image={"https://source.unsplash.com/random?graph"}
+                            image={dashboardCardImage}
                             alt="login"
                             sx={{ filter: '' }}
                         />

@@ -2,6 +2,8 @@ import { Box, Card, CardActionArea, CardMedia, CardContent, Typography } from "@
 import MeetingRoomTwoToneIcon from '@mui/icons-material/MeetingRoomTwoTone';
 import TravelExploreIcon from '@mui/icons-material/TravelExplore';
 import { NavLink } from "react-router-dom";
+import vacationsCardImage from "../../../Assets/Images/vacations.png";
+import signOutCardImage from "../../../Assets/Images/signout.png";
 
 function UserHome(): JSX.Element {
     return (
@@ -13,7 +15,7 @@ function UserHome(): JSX.Element {
                         <CardMedia
                             component="img"
                             height="170"
-                            image={"https://source.unsplash.com/random?landscape"}
+                            image={signOutCardImage}
                             alt="register"
                         />
                         <CardContent>
@@ -33,7 +35,7 @@ function UserHome(): JSX.Element {
                         <CardMedia
                             component="img"
                             height="170"
-                            image={"https://source.unsplash.com/random?city"}
+                            image={vacationsCardImage}
                             alt="login"
                             sx={{ filter: '' }}
                         />

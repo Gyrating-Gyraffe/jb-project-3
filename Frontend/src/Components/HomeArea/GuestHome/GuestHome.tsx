@@ -2,8 +2,8 @@ import AppRegistrationTwoToneIcon from '@mui/icons-material/AppRegistrationTwoTo
 import LoginTwoToneIcon from '@mui/icons-material/LoginTwoTone';
 import { Box, Card, CardActionArea, CardContent, CardMedia, Typography } from "@mui/material";
 import { NavLink } from "react-router-dom";
-import loginCardImage from "../../../Assets/Images/login_card.png";
-import registerCardImage from "../../../Assets/Images/register_card.png";
+import signInCardImage from "../../../Assets/Images/signin.png";
+import signUpCardImage from "../../../Assets/Images/signup.png";
 
 function GuestHome(): JSX.Element {
     return (
@@ -15,7 +15,7 @@ function GuestHome(): JSX.Element {
                         <CardMedia
                             component="img"
                             height="170"
-                            image={"https://source.unsplash.com/random?write"}
+                            image={signUpCardImage}
                             alt="register"
                         />
                         <CardContent>
@@ -36,7 +36,7 @@ function GuestHome(): JSX.Element {
                         <CardMedia
                             component="img"
                             height="170"
-                            image={"https://source.unsplash.com/random?lock"}
+                            image={signInCardImage}
                             alt="login"
                         />
                         <CardContent>
