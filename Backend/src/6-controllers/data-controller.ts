@@ -82,7 +82,7 @@ router.delete("/vacations/:id", [requireToken, blockNonAdmin], async (request: E
     }
 });
 
-// GET http://localhost:4000/api/vacations/:imageName
+// GET http://localhost:4000/api/images/vacations/:imageName
 router.get("/images/vacations/:imageName", async (request: Request, response: Response, next: NextFunction) => {
     try {
 
